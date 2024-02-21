@@ -1,0 +1,6 @@
+* TODO Clean up and boilerplate
+* TODO Basic Ball Physics
+* TODO Color Switch
+* TODO Arithmetics
+
+
