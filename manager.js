@@ -27,12 +27,14 @@ export class Manager {
     Manager._width = width;
     Manager._height = height;
 
+    Manager.colors = [0x5f8cff, 0xff675e, 0x9dff5a, 0xffe84f];
     // Create our pixi app
     Manager.app = new PIXI.Application({
       view: document.getElementById("pixi-canvas"),
       resizeTo: window, // This line here handles the actual resize!
       resolution: window.devicePixelRatio || 1,
       autoDensity: true,
+            antialias:true,
       backgroundColor: background,
     });
     Manager.app.ticker.add(Manager.update);

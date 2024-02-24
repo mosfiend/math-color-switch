@@ -11,8 +11,8 @@ export class Hero extends PIXI.Container {
     this.keySet = keySet;
     // graphics
     this.sprite = new PIXI.Graphics().beginFill(0xcccccc).drawCircle(0, 0, 17);
-    this.sprite.x = this.screenWidth/2;
-    this.sprite.y = this.screenHeight*0.8;
+    this.sprite.x = this.screenWidth / 2;
+    this.sprite.y = this.screenHeight * 0.8;
 
     this.addChild(this.sprite);
     // physics
@@ -42,10 +42,8 @@ export class Hero extends PIXI.Container {
   }
 
   startJump() {
-    console.log("go");
     Matter.Body.setVelocity(this.body, { x: this.dx, y: -10 });
     const v = Matter.Body.getVelocity(this.body);
-    console.log(v);
     this.dy = v.y;
   }
 

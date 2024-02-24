@@ -3,9 +3,7 @@ import Matter from "matter-js";
 import { Manager } from "../manager.js";
 import { Background } from "../game/Background.js";
 import { Hero } from "../game/Hero.js";
-import { PlatBuffer } from "../game/Platforms.js";
-import { TrainWreck } from "../game/Collision.js";
-import { Crowd } from "../game/Crowd.js";
+import { DoubleCircle, Square } from "../game/Platforms.js";
 import * as Filters from "pixi-filters";
 import { sound } from "@pixi/sound";
 export class Stage extends PIXI.Container {
@@ -18,14 +16,17 @@ export class Stage extends PIXI.Container {
     this.writerMode = false;
     this.theme = sound._sounds.around;
     this.theme.volume = 0.05;
-    this.theme.speed = 1.24;
-    this.theme.play();
+    // this.theme.play();
     // this.song = sound.add("spice", "/assets/images/ITS.mp3")
     /// ELEMENTS
+    this.platforms = new DoubleCircle(this.screenWidth / 2, 0);
+    this.square = new Square(this.screenWidth / 2, 0);
     this.bg = new Background(this.screenHeight);
     this.groundHeight = this.bg.groundHeight;
     this.hero = new Hero(this.screenWidth / 2, 150, this.keySet);
-    this.addChild(this.bg, this.hero);
+    this.text = new PIXI.Text(this.hero.sprite.y, { fill: 0xffffff });
+    this.text.y = this.hero.sprite.y;
+    this.addChild(this.bg, this.platforms, this.square, this.hero, this.text);
     this.interactive = true;
     // make entire screen interactive
     const bg = new PIXI.Graphics()
@@ -57,29 +58,20 @@ export class Stage extends PIXI.Container {
   }
   update(deltaTime) {
     this.handleEvent();
-
-    if (!this.writerMode) {
-      this.bg.update(deltaTime);
-      this.hero.update(deltaTime);
+    this.text.text = Math.trunc(this.hero.sprite.y);
+    this.bg.update(deltaTime);
+    this.hero.update(deltaTime);
+    const world = Manager.app.stage;
+    const DIFF = this.hero.sprite.y - (this.screenHeight / 2 + world.pivot.y);
+    if (DIFF < 0) {
+      // world.position.y= this.hero.y + 5
+      world.pivot.set(0, world.pivot.y + DIFF);
+      console.log(world.y, world.pivot.y, this.hero.sprite.y);
     }
+    this.platforms.update(deltaTime);
+    this.square.update(deltaTime);
   }
 
-  changeMode(mode) {
-    if (!this.writerMode) {
-      this.text.cursorIdx = 0;
-      this.bg.filters = [this.filter];
-      this.platforms.filters = [this.filter];
-      this.crowd.filters = [this.filter];
-      this.text.addChild(this.text.cursor);
-    } else {
-      this.bg.filters.pop();
-      this.platforms.filters.pop();
-      this.crowd.filters.pop();
-      this.text.removeChild(this.text.cursor);
-    }
-    this.writerMode = !this.writerMode;
-    this.hero.body.isStatic = !this.hero.body.isStatic;
-  }
   watch(el) {
     el.addEventListener("keydown", (e) => {
       this.keySet.add(e.key);
@@ -90,14 +82,6 @@ export class Stage extends PIXI.Container {
     });
   }
   handleEvent(key) {
-    if (key === "k") {
-      this.changeMode();
-    }
-    // two types of input here, keySet for character movement and the key parameter for more delicate movements (changing stats)
-    if (!this.writerMode) {
-      this.hero.handleEvent(key, this.keySet);
-    } else {
-      this.text.handleEvent(key);
-    }
+    this.hero.handleEvent(key, this.keySet);
   }
 }

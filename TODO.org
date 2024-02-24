@@ -1,6 +1,10 @@
-* TODO Clean up and boilerplate
-* TODO Basic Ball Physics
+* DONE Clean up and boilerplate
+* DONE Basic Ball Physics
 * TODO Color Switch
+* TODO Game Logic
+    * [ ] Procedurally generated stages
 * TODO Arithmetics
+
+
 
 

@@ -1,108 +1,211 @@
-import * as PIXI from 'pixi.js'
-import Matter from 'matter-js';
+import { Graphics, Container } from "pixi.js";
+import Matter from "matter-js";
 import { Manager } from "../manager";
-export class PlatBuffer extends PIXI.Container {
-    #head
-    #tail
-    #plats
-    #height
-    constructor(capacity, height) {
-        super();
-        this.screenWidth = Manager.width;
-        this.screenHeight = Manager.height;
-        this.capacity = capacity
-        this.#plats = new Array(capacity)
-        this.#head = 0
-        this.#tail = (this.#head - 1 + this.capacity) % this.capacity
-        this.#height = this.screenHeight
-        for (let i = 0; i < this.#plats.length; i++) {
-            this.set(i, this.screenHeight + 500 * i, "" + i + i + i + i + i + i)
+export class PlatBuffer extends Container {
+  constructor() {
+    super();
+    this.screenWidth = Manager.width;
+    this.screenHeight = Manager.height;
+  }
 
-        }
-    };
+  update(deltaTime) {}
 
-    update(deltaTime) {
-        const t = this.get(0)
-        // if (t.y < 0) {
-        //     this.set(0, this.screenHeight + 500)
-        //     this.incHead()
-        // }
-        for (let i = 0; i < this.capacity; i++) {
-            this.#plats[i].move(this.screenHeight, this.screenWidth)
-        }
-    };
+  get(idx) {}
 
-    getHeadIdx() {
-        return this.#head % this.capacity
-    }
-
-    getHead() {
-        return this.#plats[this.#head % this.capacity]
-    }
-
-    getTail() {
-        return this.#plats[this.#tail % this.capacity]
-    }
-
-    incHead() {
-        this.#head = (this.#head + 1) % this.capacity
-        // this.#tail = ((this.#head - 1 + this.capacity)) % this.capacity
-    }
-
-    get(idx) {
-        return this.#plats[(idx - this.#head + this.capacity) % this.capacity]
-    }
-
-    set(idx, height, clr) {
-        this.#height = (this.get(this.#head - 1)?.y || this.#height) + 200
-        // idx = ((idx - this.#head) % this.capacity + this.capacity) % this.capacity
-        idx = (idx + this.#head) % this.capacity
-        if (!this.#plats[idx]) {
-            this.#plats[idx] = new Platform((Math.random() * 0.4 + 0.6) * this.screenWidth, height, 100, 100, clr)
-            this.addChild(this.#plats[idx])
-        }
-        else {
-            this.#plats[idx].reuse((Math.random() * 0.4 + 0.6) * this.screenWidth, height)
-        }
-    }
+  set(idx, height, clr) {}
 }
 
-export class Platform extends PIXI.Graphics {         // The physics is implemented into the graphics object
-    constructor(x, y, width, height, clr) {
-        super();
-        //graphics
-        this.clr = clr
-        this.beginFill(this.clr)
-            .drawRect(0, 0, width, height);
-        this.pivot.set(width / 2, height / 2)
-        this.x = x;
-        this.y = y;
-        //physics
-        this.body = Matter.Bodies.rectangle(
-            this.x, this.y,
-            this.width, this.height,
-            { friction: 0, isStatic: true });
-        Matter.World.add(Manager.physics.world, this.body);
-        // this.body.gamePlatform = this; // why am i using this 
-        this.dx = 1
-        this.dy = 10
-    }
-    move(height, width) {
-        Matter.Body.setPosition(this.body, { x: this.body.position.x, y: this.body.position.y - this.dy })
-        // console.log(this.y)
-        if (this.y < 0) {
-            this.reuse((Math.random() * 0.4 + 0.6) * width, height + 500)
-        }
-        this.x = this.body.position.x;
-        this.y = this.body.position.y
-    }
-    reuse(x, y, width, height) {
-        // console.log(this.clr)
-        // console.log(x,y)
-        Matter.Body.setPosition(this.body, { x: x, y: y })
-    }
-
+export class Square extends Container {
+  // The physics is implemented into the graphics object
+  constructor(x, y, width, height, clr) {
+    super();
+    //graphics
+    this.screenWidth = Manager.width;
+    this.screenHeight = Manager.height;
+    this.x = x;
+    this.y = y;
+    this.clr = Manager.colors;
+    const WIDTH = this.screenWidth / 4;
+    this.shape1 = new Graphics()
+      .beginFill(this.clr[0])
+      .drawRect(0, 0, WIDTH, 20);
+    this.shape2 = new Graphics()
+      .beginFill(this.clr[1])
+      .drawRect(0, 0, 20, WIDTH);
+    this.shape2.x = this.shape1.width - 20;
+    this.shape3 = new Graphics()
+      .beginFill(this.clr[2])
+      .drawRect(0, 0, WIDTH, 20);
+    this.shape3.y = this.shape2.height;
+    this.shape4 = new Graphics()
+      .beginFill(this.clr[3])
+      .drawRect(0, 0, 20, WIDTH);
+    this.addChild(this.shape1, this.shape2, this.shape3, this.shape4);
+    //physics
+    // this.body = Matter.Bodies.rectangle(
+    //   0,
+    //   this.screenHeight - 10,
+    //   this.screenWidth,
+    //   10,
+    //   { friction: 0, isStatic: true },
+    // );
+    // Matter.World.add(Manager.physics.world, this.body);
+    // this.body.gamePlatform = this; // why am i using this
+    this.pivot.set(this.screenWidth / 8, this.screenWidth / 8);
+    this.dx = 1;
+    this.dy = 10;
+  }
+  update(deltaTime) {
+    this.angle += 1;
+  }
 }
-// implement a circular queue
-// uses the same 8 pixi graphics
-// but changes their shape when it's popped back to the beginning
+
+export class Triangle extends Container {
+  // The physics is implemented into the graphics object
+  constructor(x, y, width, height, clr) {
+    super();
+    //graphics
+    this.screenWidth = Manager.width;
+    this.screenHeight = Manager.height;
+    this.x = x;
+    this.y = y;
+    this.clr = [...Manager.colors];
+    this.clr.splice(Math.trunc(Math.random() * 4), 1);
+    console.log(this.clr);
+    const WIDTH = this.screenWidth / 4;
+    this.shape1 = new Graphics()
+      .beginFill(this.clr[0])
+      .drawRect(0, 0, WIDTH, 20);
+    this.shape2 = new Graphics()
+      .beginFill(this.clr[1])
+      .drawRect(0, 0, WIDTH + 28, 20);
+    this.shape3 = new Graphics()
+      .beginFill(this.clr[2])
+      .drawRect(0, 0, WIDTH + 20, 20);
+    this.shape2.angle = 60;
+    this.shape3.angle = -60;
+    this.shape3.x = Math.cos(Math.PI / 3) * (WIDTH - 20);
+    this.shape3.y = Math.sin(Math.PI / 3) * (WIDTH + 20);
+    this.addChild(this.shape1, this.shape3, this.shape2);
+    console.log(this.shape3.x, Math.cos(Math.PI / 3) * WIDTH);
+    //physics
+    // this.body = Matter.Bodies.rectangle(
+    //   0,
+    //   this.screenHeight - 10,
+    //   this.screenWidth,
+    //   10,
+    //   { friction: 0, isStatic: true },
+    // );
+    // Matter.World.add(Manager.physics.world, this.body);
+    // this.body.gamePlatform = this; // why am i using this
+
+    Math.sin(Math.PI / 3) * WIDTH;
+    this.pivot.set(WIDTH / 2, WIDTH / 2);
+    this.dx = 1;
+    this.dy = 10;
+  }
+  update(deltaTime) {
+    this.angle += 1;
+  }
+}
+
+export class Circle extends Container {
+  // The physics is implemented into the graphics object
+  constructor(x, y, width, height, clr) {
+    super();
+    //graphics
+    this.screenWidth = Manager.width;
+    this.screenHeight = Manager.height;
+    this.x = x;
+    this.y = y;
+    this.clr = Manager.colors;
+    const WIDTH = this.screenWidth / 4;
+    this.shape1 = new Graphics()
+      .lineStyle(25, this.clr[0])
+      .arc(WIDTH / 2, WIDTH / 2, WIDTH / 2, 0, Math.PI / 2)
+      .lineStyle(25, this.clr[1])
+      .arc(WIDTH / 2, WIDTH / 2, WIDTH / 2, Math.PI / 2, Math.PI)
+      .lineStyle(25, this.clr[2])
+      .arc(WIDTH / 2, WIDTH / 2, WIDTH / 2, Math.PI, (Math.PI * 3) / 2)
+      .lineStyle(25, this.clr[3])
+      .arc(WIDTH / 2, WIDTH / 2, WIDTH / 2, (Math.PI * 3) / 2, Math.PI * 2);
+
+    // this.addChild(this.shape1,this.shape2,this.shape3.this.shape4)
+    this.addChild(this.shape1);
+    //physics
+    // this.body = Matter.Bodies.rectangle(
+    //   0,
+    //   this.screenHeight - 10,
+    //   this.screenWidth,
+    //   10,
+    //   { friction: 0, isStatic: true },
+    // );
+    // Matter.World.add(Manager.physics.world, this.body);
+    // this.body.gamePlatform = this; // why am i using this
+
+    Math.sin(Math.PI / 3) * WIDTH;
+    this.pivot.set(WIDTH / 2, WIDTH / 2);
+    this.dx = 1;
+    this.dy = 10;
+  }
+  update(deltaTime) {
+    this.angle += 1;
+  }
+}
+
+export class DoubleCircle extends Container {
+  // The physics is implemented into the graphics object
+  constructor(x, y, width, height, clr) {
+    super();
+    //graphics
+    this.screenWidth = Manager.width;
+    this.screenHeight = Manager.height;
+    this.x = x;
+    this.y = y;
+    this.clr = Manager.colors;
+    const WIDTH = this.screenWidth / 4;
+    this.shape1 = new Graphics()
+      .lineStyle(25, this.clr[0])
+      .arc(WIDTH / 4, WIDTH / 4, WIDTH / 4, 0, Math.PI / 2)
+      .lineStyle(25, this.clr[1])
+      .arc(WIDTH / 4, WIDTH / 4, WIDTH / 4, Math.PI / 2, Math.PI)
+      .lineStyle(25, this.clr[2])
+      .arc(WIDTH / 4, WIDTH / 4, WIDTH / 4, Math.PI, (Math.PI * 3) / 2)
+      .lineStyle(25, this.clr[3])
+      .arc(WIDTH / 4, WIDTH / 4, WIDTH / 4, (Math.PI * 3) / 2, Math.PI * 2);
+
+    this.shape2 = new Graphics()
+      .lineStyle(25, this.clr[0])
+      .arc(WIDTH / 4, WIDTH / 4, WIDTH / 4, 0, Math.PI / 2)
+      .lineStyle(25, this.clr[1])
+      .arc(WIDTH / 4, WIDTH / 4, WIDTH / 4, Math.PI / 2, Math.PI)
+      .lineStyle(25, this.clr[2])
+      .arc(WIDTH / 4, WIDTH / 4, WIDTH / 4, Math.PI, (Math.PI * 3) / 2)
+      .lineStyle(25, this.clr[3])
+      .arc(WIDTH / 4, WIDTH / 4, WIDTH / 4, (Math.PI * 3) / 2, Math.PI * 2);
+
+    // this.addChild(this.shape1,this.shape2,this.shape3.this.shape4)
+    this.addChild(this.shape1, this.shape2);
+    //physics
+    // this.body = Matter.Bodies.rectangle(
+    //   0,
+    //   this.screenHeight - 10,
+    //   this.screenWidth,
+    //   10,
+    //   { friction: 0, isStatic: true },
+    // );
+    // Matter.World.add(Manager.physics.world, this.body);
+    // this.body.gamePlatform = this; // why am i using this
+    this.shape2.y = WIDTH / 2 + 30;
+
+    Math.sin(Math.PI / 3) * WIDTH;
+    this.shape1.pivot.set(WIDTH / 4, WIDTH / 4);
+    this.shape2.pivot.set(WIDTH / 4, WIDTH / 4);
+    this.dx = 1;
+    this.dy = 10;
+  }
+  update(deltaTime) {
+    this.shape1.angle += 1;
+    this.shape2.angle -= 1;
+  }
+}
