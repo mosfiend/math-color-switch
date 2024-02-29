@@ -1,4 +1,4 @@
-import { Graphics, Container } from "pixi.js";
+import { Graphics, Container, RoundedRectangle } from "pixi.js";
 import Matter from "matter-js";
 import { Manager } from "../manager";
 
@@ -11,23 +11,34 @@ export class Square extends Container {
     this.screenHeight = Manager.height;
     this.y = y;
     this.clr = Manager.colors;
-    const WIDTH = this.screenWidth / 4;
+    const HEIGHT = 25;
+    const WIDTH = this.screenWidth / 4 + HEIGHT;
     this.W = WIDTH;
     this.shape1 = new Graphics()
       .beginFill(this.clr[0])
-      .drawRect(0, 0, WIDTH, 20);
+      .drawRoundedRect(0, 0, WIDTH + HEIGHT, HEIGHT, 15);
     this.shape2 = new Graphics()
       .beginFill(this.clr[1])
-      .drawRect(0, 0, 20, WIDTH);
-    this.shape2.x = this.shape1.width - 20;
+      .drawRoundedRect(0, 0, HEIGHT, WIDTH + HEIGHT, 15);
+    this.shape2.x = this.shape1.width - HEIGHT;
     this.shape3 = new Graphics()
       .beginFill(this.clr[2])
-      .drawRect(0, 0, WIDTH, 20);
-    this.shape3.y = this.shape2.height;
+      .drawRoundedRect(0, 0, WIDTH + HEIGHT, HEIGHT, 15);
+    this.shape3.y = this.shape2.height - HEIGHT;
     this.shape4 = new Graphics()
       .beginFill(this.clr[3])
-      .drawRect(0, 0, 20, WIDTH);
-    this.addChild(this.shape1, this.shape2, this.shape3, this.shape4);
+      .drawRoundedRect(0, 0, HEIGHT, WIDTH + HEIGHT, 15);
+
+    this.shape1Bis = new Graphics()
+      .beginFill(this.clr[0])
+      .drawRoundedRect(0, 0, WIDTH / 2 + HEIGHT, HEIGHT, 15);
+    this.addChild(
+      this.shape1,
+      this.shape2,
+      this.shape3,
+      this.shape4,
+      this.shape1Bis,
+    );
     this.x = this.screenWidth / 2;
     this.body = Matter.Composite.create();
     this.bod1 = Matter.Bodies.rectangle(
@@ -69,7 +80,6 @@ export class Square extends Container {
       this.bod4,
     ]);
 
-    this.addChild(new Graphics().beginFill(0xff00ff).drawRect(0, 0));
     Matter.World.add(Manager.physics.world, this.body);
     this.pivot.set(WIDTH / 2, WIDTH / 2);
   }

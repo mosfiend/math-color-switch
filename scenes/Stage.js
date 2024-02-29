@@ -15,9 +15,9 @@ export class Stage extends Container {
     this.filter = new Filters.AsciiFilter();
     this.keySet = new Set();
     this.writerMode = false;
-    this.theme = sound._sounds.around;
-    this.theme.volume = 0.05;
-    this.lost = false;
+    // this.theme = sound._sounds.around;
+    // this.theme.volume = 0.05;
+    // this.lost = false;
     // this.theme.play();
     // this.song = sound.add("spice", "/assets/images/ITS.mp3")
     /// ELEMENTS

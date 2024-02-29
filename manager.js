@@ -44,6 +44,8 @@ export class Manager {
   }
 
   static resize() {
+    const parent = Manager.app.view.parentNode;
+    Manager.app.renderer.resize(parent.clientWidth, parent.clientHeight);
     if (Manager.currentScene) {
       Manager.currentScene.resize(Manager.width, Manager.height);
     }
