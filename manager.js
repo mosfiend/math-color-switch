@@ -1,5 +1,6 @@
 import * as PIXI from "pixi.js";
 import Matter from "matter-js";
+import { Stage } from "./scenes/Stage";
 
 export class Manager {
   constructor() {}
@@ -34,7 +35,7 @@ export class Manager {
       resizeTo: window, // This line here handles the actual resize!
       resolution: window.devicePixelRatio || 1,
       autoDensity: true,
-            antialias:true,
+      antialias: true,
       backgroundColor: background,
     });
     Manager.app.ticker.add(Manager.update);
@@ -65,5 +66,11 @@ export class Manager {
     if (Manager.currentScene != undefined) {
       Manager.currentScene.update(deltaTime);
     }
+  }
+
+  static gameOver() {
+    if (Manager.currentScene != undefined) Manager.currentScene.transitionOut();
+    Manager.currentScene = new Stage();
+    Manager.currentScene.transitionIn();
   }
 }

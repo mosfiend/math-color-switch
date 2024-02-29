@@ -1,10 +1,18 @@
 * DONE Clean up and boilerplate
 * DONE Basic Ball Physics
-* TODO Color Switch
+* DONE Color Switch
 * TODO Game Logic
     * [ ] Procedurally generated stages
 * TODO Arithmetics
-
+    * [ ] Addition
+    * [ ] Subtraction
+    * [ ] Division
+    * [ ] Multiplication
+* TODO UI
+    * [ ] Select operations
+    * [ ] Put logo on the game
+    * [ ] Add a dutch version
+    * [ ] Resize it appropriately
 
 
 

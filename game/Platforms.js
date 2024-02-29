@@ -1,31 +1,18 @@
 import { Graphics, Container } from "pixi.js";
 import Matter from "matter-js";
 import { Manager } from "../manager";
-export class PlatBuffer extends Container {
-  constructor() {
-    super();
-    this.screenWidth = Manager.width;
-    this.screenHeight = Manager.height;
-  }
-
-  update(deltaTime) {}
-
-  get(idx) {}
-
-  set(idx, height, clr) {}
-}
 
 export class Square extends Container {
   // The physics is implemented into the graphics object
-  constructor(x, y, width, height, clr) {
+  constructor(y) {
     super();
     //graphics
     this.screenWidth = Manager.width;
     this.screenHeight = Manager.height;
-    this.x = x;
     this.y = y;
     this.clr = Manager.colors;
     const WIDTH = this.screenWidth / 4;
+    this.W = WIDTH;
     this.shape1 = new Graphics()
       .beginFill(this.clr[0])
       .drawRect(0, 0, WIDTH, 20);
@@ -41,22 +28,66 @@ export class Square extends Container {
       .beginFill(this.clr[3])
       .drawRect(0, 0, 20, WIDTH);
     this.addChild(this.shape1, this.shape2, this.shape3, this.shape4);
-    //physics
-    // this.body = Matter.Bodies.rectangle(
-    //   0,
-    //   this.screenHeight - 10,
-    //   this.screenWidth,
-    //   10,
-    //   { friction: 0, isStatic: true },
-    // );
-    // Matter.World.add(Manager.physics.world, this.body);
-    // this.body.gamePlatform = this; // why am i using this
-    this.pivot.set(this.screenWidth / 8, this.screenWidth / 8);
-    this.dx = 1;
-    this.dy = 10;
+    this.x = this.screenWidth / 2;
+    this.body = Matter.Composite.create();
+    this.bod1 = Matter.Bodies.rectangle(
+      this.shape1.x + this.x - WIDTH / 2 + this.shape1.width / 2,
+      this.shape1.y + this.y - WIDTH / 2 + this.shape1.height / 2,
+      this.shape1.width,
+      this.shape1.height,
+      { friction: 0, isStatic: true, isSensor: true },
+    );
+    this.bod2 = Matter.Bodies.rectangle(
+      this.shape2.x + this.x - WIDTH / 2 + this.shape2.width / 2,
+      this.shape2.y + this.y - WIDTH / 2 + this.shape2.height / 2,
+      this.shape2.width,
+      this.shape2.height,
+      { friction: 0, isStatic: true, isSensor: true },
+    );
+    this.bod3 = Matter.Bodies.rectangle(
+      this.shape3.x + this.x - WIDTH / 2 + this.shape3.width / 2,
+      this.shape3.y + this.y - WIDTH / 2 + this.shape3.height / 2,
+      this.shape3.width,
+      this.shape3.height,
+      { friction: 0, isStatic: true, isSensor: true },
+    );
+    this.bod4 = Matter.Bodies.rectangle(
+      this.shape4.x + this.x - WIDTH / 2 + this.shape4.width / 2,
+      this.shape4.y + this.y - WIDTH / 2 + this.shape4.height / 2,
+      this.shape4.width,
+      this.shape4.height,
+      { friction: 0, isStatic: true, isSensor: true },
+    );
+    this.bod1.clr = this.clr[0];
+    this.bod2.clr = this.clr[1];
+    this.bod3.clr = this.clr[2];
+    this.bod4.clr = this.clr[3];
+    Matter.Composite.add(this.body, [
+      this.bod1,
+      this.bod2,
+      this.bod3,
+      this.bod4,
+    ]);
+
+    this.addChild(new Graphics().beginFill(0xff00ff).drawRect(0, 0));
+    Matter.World.add(Manager.physics.world, this.body);
+    this.pivot.set(WIDTH / 2, WIDTH / 2);
   }
+
   update(deltaTime) {
-    this.angle += 1;
+    // Matter.Body.setAngle(this.body, (this.angle / 180) * Math.PI);
+    // // this.shape.angle = (this.body.angle * 180) / Math.PI;
+    // this.sprite.x = this.body.position.x;
+    // this.sprite.y = this.body.position.y;
+    //
+    Matter.Composite.rotate(this.body, 0.02, {
+      x: this.screenWidth / 2,
+      y: this.y,
+    });
+    this.angle += ((0.02 / Math.PI) * 180) % 360;
+    // // Matter.Body.setAngle(this.roofTile.body, Math.PI / 4);
+    // const anga = (this.body.angle / Math.PI) * 180;
+    // this.sprite.angle = anga;
   }
 }
 
@@ -71,7 +102,6 @@ export class Triangle extends Container {
     this.y = y;
     this.clr = [...Manager.colors];
     this.clr.splice(Math.trunc(Math.random() * 4), 1);
-    console.log(this.clr);
     const WIDTH = this.screenWidth / 4;
     this.shape1 = new Graphics()
       .beginFill(this.clr[0])
@@ -87,7 +117,6 @@ export class Triangle extends Container {
     this.shape3.x = Math.cos(Math.PI / 3) * (WIDTH - 20);
     this.shape3.y = Math.sin(Math.PI / 3) * (WIDTH + 20);
     this.addChild(this.shape1, this.shape3, this.shape2);
-    console.log(this.shape3.x, Math.cos(Math.PI / 3) * WIDTH);
     //physics
     // this.body = Matter.Bodies.rectangle(
     //   0,
@@ -100,7 +129,7 @@ export class Triangle extends Container {
     // this.body.gamePlatform = this; // why am i using this
 
     Math.sin(Math.PI / 3) * WIDTH;
-    this.pivot.set(WIDTH / 2, WIDTH / 2);
+    this.pivot.set(WIDTH / 2, (Math.sin(Math.PI / 3) * WIDTH) / 2);
     this.dx = 1;
     this.dy = 10;
   }
@@ -165,23 +194,23 @@ export class DoubleCircle extends Container {
     this.clr = Manager.colors;
     const WIDTH = this.screenWidth / 4;
     this.shape1 = new Graphics()
-      .lineStyle(25, this.clr[0])
+      .lineStyle(22, this.clr[0])
       .arc(WIDTH / 4, WIDTH / 4, WIDTH / 4, 0, Math.PI / 2)
-      .lineStyle(25, this.clr[1])
+      .lineStyle(22, this.clr[1])
       .arc(WIDTH / 4, WIDTH / 4, WIDTH / 4, Math.PI / 2, Math.PI)
-      .lineStyle(25, this.clr[2])
+      .lineStyle(22, this.clr[2])
       .arc(WIDTH / 4, WIDTH / 4, WIDTH / 4, Math.PI, (Math.PI * 3) / 2)
-      .lineStyle(25, this.clr[3])
+      .lineStyle(22, this.clr[3])
       .arc(WIDTH / 4, WIDTH / 4, WIDTH / 4, (Math.PI * 3) / 2, Math.PI * 2);
-
+    // this.shape1.angle=90
     this.shape2 = new Graphics()
-      .lineStyle(25, this.clr[0])
+      .lineStyle(22, this.clr[3])
       .arc(WIDTH / 4, WIDTH / 4, WIDTH / 4, 0, Math.PI / 2)
-      .lineStyle(25, this.clr[1])
+      .lineStyle(22, this.clr[2])
       .arc(WIDTH / 4, WIDTH / 4, WIDTH / 4, Math.PI / 2, Math.PI)
-      .lineStyle(25, this.clr[2])
+      .lineStyle(22, this.clr[1])
       .arc(WIDTH / 4, WIDTH / 4, WIDTH / 4, Math.PI, (Math.PI * 3) / 2)
-      .lineStyle(25, this.clr[3])
+      .lineStyle(22, this.clr[0])
       .arc(WIDTH / 4, WIDTH / 4, WIDTH / 4, (Math.PI * 3) / 2, Math.PI * 2);
 
     // this.addChild(this.shape1,this.shape2,this.shape3.this.shape4)
