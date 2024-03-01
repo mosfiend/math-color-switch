@@ -1,24 +1,28 @@
 import { Container, Graphics } from "pixi.js";
 import { Manager } from "../manager";
 export class Arithmetic extends Container {
-  constructor() {
+  constructor(y) {
     super();
     this.screenWidth = Manager.width;
     this.screenHeight = Manager.height;
+    this.y = y;
+    this.operators = [...Manager.operators];
 
- this.operators =[...Manager.operators]
+    this.operand = [Math.trunc(Math.random() * this.operands.length)];
 
-this.operand = [Math.trunc(Math.random()*this.operands.length)]
-
-Math.random
-    const choices = [];
-    this.choiceWidth = this.sceneWidth / projects.length;
+    const lenChoices = 5;
+    this.choices = [];
+    this.choiceWidth = this.sceneWidth / lenChoices;
     this.idx = 0;
-for (let i =0;i<5)
+    for (let i = 0; i < 5; i++) {
+      const choice = new Choice(x * this.choiceWidth);
+      this.addChild(choice);
+      this.choices.push(choice);
+    }
   }
 
   update() {
-    possibilities.forEach(() => {});
+    this.choices.forEach(() => {});
   }
 
   createChoice(src) {

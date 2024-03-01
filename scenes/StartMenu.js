@@ -23,8 +23,8 @@ export class StartMenu extends Container {
       .drawRect(0, 0, this.screenWidth, this.screenHeight);
     // Create a play button
     const playButton = new Graphics()
-      .beginFill(0x00ff00)
-      .drawRoundedRect(-100, -30, 200, 60, 15);
+      .beginFill(0x231f20)
+      .drawRoundedRect(-150, -35, 300, 60, 15);
     playButton.interactive = true;
     playButton.buttonMode = true;
     playButton.on("pointerdown", () => {
@@ -37,7 +37,6 @@ export class StartMenu extends Container {
       playButton.cursor = "default";
     });
     this.menuBox.addChild(playButton);
-
     // Create a play button text
     const buttonText = new Text("Play", {
       fontSize: 32,
@@ -49,6 +48,8 @@ export class StartMenu extends Container {
     this.menuBox.addChild(buttonText);
 
     this.selection = new Selection();
+    this.selection.x = this.screenWidth / 2 - this.selection.width / 2;
+    this.selection.y = this.screenHeight * 0.35;
     this.addChild(
       this.background,
       this.menuBox,
