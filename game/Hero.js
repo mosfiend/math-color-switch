@@ -11,9 +11,8 @@ export class Hero extends PIXI.Container {
     // graphics
     this.sprite = new PIXI.Graphics().beginFill(KAHLER).drawCircle(0, 0, 15);
     // this.sprite.x = this.screenWidth / 2 + this.screenWidth / 8 - 5;
-    this.sprite.x = this.screenWidth / 2;
+    this.sprite.x = this.screenWidth / 2 - this.sprite.width / 2;
     this.sprite.y = this.screenHeight * 0.8;
-
     this.addChild(this.sprite);
     // physics
     this.body = Matter.Bodies.circle(

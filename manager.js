@@ -29,6 +29,13 @@ export class Manager {
     Manager._height = height;
 
     Manager.colors = [0x5f8cff, 0xff675e, 0x9dff5a, 0xffe84f];
+    Manager.operators = ["+", "-", "*", "/"];
+    Manager.arithmetic = {
+      plus: true,
+      minus: true,
+      times: true,
+      by: true,
+    };
     // Create our pixi app
     Manager.app = new PIXI.Application({
       view: document.getElementById("pixi-canvas"),

@@ -2,6 +2,7 @@ import { Container } from "pixi.js";
 import { Manager } from "../manager";
 import { Circle, DoubleCircle, Square, Triangle } from "./Platforms";
 import { ColorChanger, Star } from "./Items";
+import { Arithmetic } from "./Arithmetic";
 
 export class GameLoop extends Container {
   constructor() {
@@ -12,8 +13,12 @@ export class GameLoop extends Container {
     this.blocks = [];
     this.stars = [];
     this.changers = [];
-    this.obstacles = [Square];
-    // , Triangle, Circle, DoubleCircle];
+    this.obstacles = [
+      Square,
+      //  Triangle,
+      Circle,
+      DoubleCircle,
+    ];
 
     const star = new Star(Manager.app.stage.pivot.y);
     const block = new this.obstacles[
@@ -54,12 +59,18 @@ export class GameLoop extends Container {
     );
     this.stars.push(star);
     this.blocks.push(block);
-    this.step = (this.step + 1) % 4;
+    this.step = (this.step + 1) % 5;
     this.addChild(block);
     this.addChild(star);
   }
+  createArithmeticBlock() {
+    const block = new Arithmetic();
+
+    this.blocks.push(block);
+    this.addChild(Block);
+  }
   changeColor() {
-    this.step = (this.step + 1) % 4;
+    this.step = (this.step + 1) % 5;
     const ball = new ColorChanger(
       this.blocks[this.blocks.length - 1].y - this.screenHeight,
     );

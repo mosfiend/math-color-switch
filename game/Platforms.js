@@ -12,7 +12,7 @@ export class Square extends Container {
     this.y = y;
     this.clr = Manager.colors;
     const HEIGHT = 25;
-    const WIDTH = this.screenWidth / 4 + HEIGHT;
+    const WIDTH = 270 + HEIGHT;
     this.W = WIDTH;
     this.shape1 = new Graphics()
       .beginFill(this.clr[0])
@@ -40,31 +40,33 @@ export class Square extends Container {
       this.shape1Bis,
     );
     this.x = this.screenWidth / 2;
+    this.pivot.set(WIDTH / 2+HEIGHT/2, WIDTH / 2+HEIGHT/2);
+
     this.body = Matter.Composite.create();
     this.bod1 = Matter.Bodies.rectangle(
-      this.shape1.x + this.x - WIDTH / 2 + this.shape1.width / 2,
-      this.shape1.y + this.y - WIDTH / 2 + this.shape1.height / 2,
+      this.shape1.x + this.x - this.pivot.x + this.shape1.width / 2,
+      this.shape1.y + this.y - this.pivot.y + this.shape1.height / 2,
       this.shape1.width,
       this.shape1.height,
       { friction: 0, isStatic: true, isSensor: true },
     );
     this.bod2 = Matter.Bodies.rectangle(
-      this.shape2.x + this.x - WIDTH / 2 + this.shape2.width / 2,
-      this.shape2.y + this.y - WIDTH / 2 + this.shape2.height / 2,
+      this.shape2.x + this.x - this.pivot.x + this.shape2.width / 2,
+      this.shape2.y + this.y - this.pivot.y + this.shape2.height / 2,
       this.shape2.width,
       this.shape2.height,
       { friction: 0, isStatic: true, isSensor: true },
     );
     this.bod3 = Matter.Bodies.rectangle(
-      this.shape3.x + this.x - WIDTH / 2 + this.shape3.width / 2,
-      this.shape3.y + this.y - WIDTH / 2 + this.shape3.height / 2,
+      this.shape3.x + this.x - this.pivot.x + this.shape3.width / 2,
+      this.shape3.y + this.y - this.pivot.y + this.shape3.height / 2,
       this.shape3.width,
       this.shape3.height,
       { friction: 0, isStatic: true, isSensor: true },
     );
     this.bod4 = Matter.Bodies.rectangle(
-      this.shape4.x + this.x - WIDTH / 2 + this.shape4.width / 2,
-      this.shape4.y + this.y - WIDTH / 2 + this.shape4.height / 2,
+      this.shape4.x + this.x - this.pivot.x + this.shape4.width / 2,
+      this.shape4.y + this.y - this.pivot.y + this.shape4.height / 2,
       this.shape4.width,
       this.shape4.height,
       { friction: 0, isStatic: true, isSensor: true },
@@ -81,7 +83,6 @@ export class Square extends Container {
     ]);
 
     Matter.World.add(Manager.physics.world, this.body);
-    this.pivot.set(WIDTH / 2, WIDTH / 2);
   }
 
   update(deltaTime) {
@@ -150,14 +151,17 @@ export class Triangle extends Container {
 
 export class Circle extends Container {
   // The physics is implemented into the graphics object
-  constructor(x, y, width, height, clr) {
+  constructor(y) {
     super();
     //graphics
     this.screenWidth = Manager.width;
     this.screenHeight = Manager.height;
-    this.x = x;
+    this.x = this.screenWidth / 2;
     this.y = y;
     this.clr = Manager.colors;
+    this.body = {};
+    this.body.clr1 = 0;
+    this.body.clr2 = 2;
     const WIDTH = this.screenWidth / 4;
     this.shape1 = new Graphics()
       .lineStyle(25, this.clr[0])
@@ -169,18 +173,7 @@ export class Circle extends Container {
       .lineStyle(25, this.clr[3])
       .arc(WIDTH / 2, WIDTH / 2, WIDTH / 2, (Math.PI * 3) / 2, Math.PI * 2);
 
-    // this.addChild(this.shape1,this.shape2,this.shape3.this.shape4)
     this.addChild(this.shape1);
-    //physics
-    // this.body = Matter.Bodies.rectangle(
-    //   0,
-    //   this.screenHeight - 10,
-    //   this.screenWidth,
-    //   10,
-    //   { friction: 0, isStatic: true },
-    // );
-    // Matter.World.add(Manager.physics.world, this.body);
-    // this.body.gamePlatform = this; // why am i using this
 
     Math.sin(Math.PI / 3) * WIDTH;
     this.pivot.set(WIDTH / 2, WIDTH / 2);
@@ -188,18 +181,20 @@ export class Circle extends Container {
     this.dy = 10;
   }
   update(deltaTime) {
-    this.angle += 1;
+    this.angle = (this.angle + 1) % 360;
+    this.body.clr1 = (this.body.clr1 + 1) % 4;
+    this.body.clr2 = (this.body.clr2 + 1) % 4;
   }
 }
 
 export class DoubleCircle extends Container {
   // The physics is implemented into the graphics object
-  constructor(x, y, width, height, clr) {
+  constructor(y) {
     super();
     //graphics
     this.screenWidth = Manager.width;
     this.screenHeight = Manager.height;
-    this.x = x;
+    this.x = this.screenWidth / 2;
     this.y = y;
     this.clr = Manager.colors;
     const WIDTH = this.screenWidth / 4;

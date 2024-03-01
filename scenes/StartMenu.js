@@ -1,4 +1,4 @@
-import { Container, Graphics, Sprite, Text } from "pixi.js";
+import { Container, Graphics, Sprite, Text, Texture } from "pixi.js";
 import { Manager } from "../manager.js";
 import { Stage } from "./Stage.js";
 export class StartMenu extends Container {
@@ -9,12 +9,13 @@ export class StartMenu extends Container {
     this.logo = Sprite.from("logo");
     this.title = Sprite.from("title");
     this.logo.x = this.screenWidth / 2;
-    this.logo.y = this.screenHeight * 0.2;
+    this.logo.y = this.screenHeight * 0.8;
     this.title.x = this.screenWidth / 2;
-    this.title.y = this.screenHeight * 0.8;
+    this.title.y = this.screenHeight * 0.2;
     this.logo.anchor.set(0.5, 0.5);
     this.title.anchor.set(0.5, 0.5);
-
+    this.title.scale.set(0.6, 0.6);
+    this.logo.scale.set(0.6, 0.6);
     this.menuBox = new Container();
     this.menuBox.position.set(this.screenWidth / 2, this.screenHeight / 2);
     this.background = new Graphics()
@@ -47,42 +48,16 @@ export class StartMenu extends Container {
     buttonText.position.set(0, -10);
     this.menuBox.addChild(buttonText);
 
-    // Create additional elements
-    const infoText = new Text("Welcome to the Game", {
-      fontSize: 24,
-      fill: 0xffffff,
-      align: "center",
-    });
-    infoText.anchor.set(0.5, 0.5);
-    infoText.position.set(0, -80);
-    this.menuBox.addChild(infoText);
-
-    this.optionsButton = new Graphics()
-      .beginFill(0x0000ff)
-      .drawRoundedRect(-80, 20, 160, 40, 10);
-    this.optionsButton.interactive = true;
-    this.optionsButton.buttonMode = true;
-    this.optionsButton.on("pointerdown", () => {
-      // Handle options button click
-    });
-    this.optionsButton.on("pointerover", () => {
-      this.optionsButton.cursor = "pointer";
-    });
-    this.optionsButton.on("pointerout", () => {
-      this.optionsButton.cursor = "default";
-    });
-    this.menuBox.addChild(this.optionsButton);
-
-    const optionsText = new Text("Options", {
-      fontSize: 20,
-      fill: 0xffffff,
-      align: "center",
-    });
-    optionsText.anchor.set(0.5, 0.5);
-    optionsText.position.set(0, 40);
-    this.menuBox.addChild(optionsText);
-
-    this.addChild(this.background, this.menuBox, this.logo, this.title);
+    this.selection = new Selection();
+    this.addChild(
+      this.background,
+      this.menuBox,
+      this.logo,
+      this.title,
+      this.selection,
+    );
+    this.logo.x = this.screenWidth / 2;
+    this.logo.y = this.screenHeight * 0.8;
   }
 
   transitionIn() {
@@ -101,5 +76,55 @@ export class StartMenu extends Container {
 
   update(deltaTime) {
     // Update logic goes here
+  }
+}
+
+class Selection extends Container {
+  constructor() {
+    super();
+    this.plus = new Icon("plus");
+    this.minus = new Icon("minus");
+    this.times = new Icon("times");
+    this.by = new Icon("by");
+
+    this.minus.x = this.plus.width + 10;
+    this.times.x = this.minus.width + this.minus.x + 10;
+    this.by.x = this.times.width + this.times.x + 10;
+    this.addChild(this.plus, this.minus, this.times, this.by);
+    this.scale.set(0.3, 0.3);
+  }
+}
+class Icon extends Sprite {
+  constructor(texture) {
+    super();
+    this.operator = texture;
+    this.selected = Manager.arithmetic[texture];
+    this.texture = Texture.from(texture);
+    this.eventMode = "static";
+    this.cursor = "pointer";
+
+    this.on("pointerdown", () => {
+      this.select();
+    });
+  }
+  select() {
+    if (!this.selected) {
+      this.alpha = 1;
+      Manager.arithmetic[this.operator] = true;
+    } else {
+      if (this.checkFalsehood() === 1) return;
+      this.alpha = 0.6;
+      Manager.arithmetic[this.operator] = false;
+    }
+
+    this.selected = !this.selected;
+  }
+  checkFalsehood() {
+    let output = 0;
+    for (let operator in Manager.arithmetic) {
+      if (Manager.arithmetic[operator]) output++;
+    }
+    console.log(output);
+    return output;
   }
 }
