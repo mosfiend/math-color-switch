@@ -22,7 +22,7 @@ export class ColorChanger extends Container {
       .beginFill(this.clr[3])
       .arc(0, 0, this.diam, (Math.PI * 3) / 2, Math.PI * 2);
     this.addChild(this.shape);
-    this.shape.pivot.set(1,1);
+    this.shape.pivot.set(1, 1);
   }
 
   update() {

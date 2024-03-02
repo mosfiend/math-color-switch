@@ -125,7 +125,6 @@ class Icon extends Sprite {
     for (let operator in Manager.arithmetic) {
       if (Manager.arithmetic[operator]) output++;
     }
-    console.log(output);
     return output;
   }
 }

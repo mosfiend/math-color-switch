@@ -30,11 +30,6 @@ export class Stage extends Container {
     this.addChild(this.bg, this.gameLoop, this.hero, this.text);
     this.interactive = true;
     // make entire screen interactive
-    const bg = new Graphics()
-      .beginFill(0xff00ff)
-      .drawRect(0, 0, this.screenWidth, this.screenHeight);
-    bg.alpha = 0;
-    this.addChild(bg);
     this.on("pointerdown", () => {
       this.hero.startJump();
     });
@@ -69,6 +64,7 @@ export class Stage extends Container {
     if (DIFF < 0) {
       // world.position.y= this.hero.y + 5
       world.pivot.set(0, world.pivot.y + DIFF);
+      this.bg.y=world.pivot.y
     }
     this.gameLoop.update(deltaTime);
 
@@ -79,6 +75,39 @@ export class Stage extends Container {
         this.hero.sprite.y < changer.y + changer.diam
       ) {
         this.hero.changeColor(changer.mainClr);
+      }
+    });
+
+    //Circle Impact Detection
+    this.gameLoop.blocks.forEach((obstacle) => {
+      if (!obstacle.body) return; // color changers
+      const Y = this.hero.y + this.hero.sprite.y;
+      const Y1 = obstacle.y + obstacle.shape1.y + obstacle.W / 2;
+      const Y2 = obstacle.y + (obstacle.shape1.y - obstacle.W) / 2;
+      switch (obstacle.body.type) {
+        case "circle":
+          if (
+            ((Y > Y1 && Y < Y1 + obstacle.diam) ||
+              (Y + this.hero.height > Y1 &&
+                Y + this.hero.height < Y1 + obstacle.diam)) &&
+            this.hero.body.clr !== obstacle.body.clr2
+          ) {
+            this.lost = true;
+          }
+          if (
+            ((Y > Y2 && Y < Y2 + obstacle.diam) ||
+              (Y + this.hero.height > Y2 &&
+                Y + this.hero.height < Y2 + obstacle.diam)) &&
+            this.hero.body.clr !== obstacle.body.clr1
+          ) {
+            this.lost = true;
+          }
+          break;
+        case "doubleCircle":
+          break;
+        default:
+          console.log("nuh");
+          return;
       }
     });
   }
@@ -99,7 +128,6 @@ export class Stage extends Container {
 
   interact(e) {
     const colliders = [e.pairs[0].bodyA, e.pairs[0].bodyB];
-    console.log(colliders[0].clr, colliders[1].clr);
     if (colliders[0].clr !== colliders[1].clr) {
       this.lost = true;
     }

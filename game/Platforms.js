@@ -14,6 +14,7 @@ export class Square extends Container {
     const HEIGHT = 25;
     const WIDTH = 270 + HEIGHT;
     this.W = WIDTH;
+    this.diam = HEIGHT;
     this.shape1 = new Graphics()
       .beginFill(this.clr[0])
       .drawRoundedRect(0, 0, WIDTH + HEIGHT, HEIGHT, 15);
@@ -40,7 +41,7 @@ export class Square extends Container {
       this.shape1Bis,
     );
     this.x = this.screenWidth / 2;
-    this.pivot.set(WIDTH / 2+HEIGHT/2, WIDTH / 2+HEIGHT/2);
+    this.pivot.set(WIDTH / 2 + HEIGHT / 2, WIDTH / 2 + HEIGHT / 2);
 
     this.body = Matter.Composite.create();
     this.bod1 = Matter.Bodies.rectangle(
@@ -95,7 +96,7 @@ export class Square extends Container {
       x: this.screenWidth / 2,
       y: this.y,
     });
-    this.angle += ((0.02 / Math.PI) * 180) % 360;
+    this.angle = ((this.bod1.angle / Math.PI) * 180) % 360;
     // // Matter.Body.setAngle(this.roofTile.body, Math.PI / 4);
     // const anga = (this.body.angle / Math.PI) * 180;
     // this.sprite.angle = anga;
@@ -159,17 +160,23 @@ export class Circle extends Container {
     this.x = this.screenWidth / 2;
     this.y = y;
     this.clr = Manager.colors;
-    this.body = {};
-    this.body.clr1 = 0;
-    this.body.clr2 = 2;
-    const WIDTH = this.screenWidth / 4;
+
+    this.body = {
+      type: "circle",
+      clr1: this.clr[0],
+      clr2: this.clr[2],
+    };
+
+    const WIDTH = 295;
+    this.W = WIDTH;
+    this.diam = 25;
     this.shape1 = new Graphics()
       .lineStyle(25, this.clr[0])
-      .arc(WIDTH / 2, WIDTH / 2, WIDTH / 2, 0, Math.PI / 2)
+      .arc(WIDTH / 2, WIDTH / 2, WIDTH / 2, -0.01, Math.PI / 2 + 0.1)
       .lineStyle(25, this.clr[1])
-      .arc(WIDTH / 2, WIDTH / 2, WIDTH / 2, Math.PI / 2, Math.PI)
+      .arc(WIDTH / 2, WIDTH / 2, WIDTH / 2, Math.PI / 2, Math.PI + 0.1)
       .lineStyle(25, this.clr[2])
-      .arc(WIDTH / 2, WIDTH / 2, WIDTH / 2, Math.PI, (Math.PI * 3) / 2)
+      .arc(WIDTH / 2, WIDTH / 2, WIDTH / 2, Math.PI, (Math.PI * 3) / 2 + 0.1)
       .lineStyle(25, this.clr[3])
       .arc(WIDTH / 2, WIDTH / 2, WIDTH / 2, (Math.PI * 3) / 2, Math.PI * 2);
 
@@ -179,11 +186,25 @@ export class Circle extends Container {
     this.pivot.set(WIDTH / 2, WIDTH / 2);
     this.dx = 1;
     this.dy = 10;
+    this.idx1 = 0;
+    this.idx2 = 2;
   }
   update(deltaTime) {
     this.angle = (this.angle + 1) % 360;
-    this.body.clr1 = (this.body.clr1 + 1) % 4;
-    this.body.clr2 = (this.body.clr2 + 1) % 4;
+    if (this.angle < 90) {
+      this.body.clr1 = this.clr[2];
+      this.body.clr2 = this.clr[0];
+    } else if (this.angle < 180) {
+      this.body.clr1 = this.clr[1];
+      this.body.clr2 = this.clr[3];
+    } else if (this.angle < 270) {
+      this.body.clr1 = this.clr[0];
+      this.body.clr2 = this.clr[2];
+    } else {
+      this.body.clr1 = this.clr[3];
+      this.body.clr2 = this.clr[1];
+    }
+    console.log(this.angle, this.body.clr2, Manager.currentScene.hero.body.clr);
   }
 }
 
@@ -218,6 +239,11 @@ export class DoubleCircle extends Container {
       .lineStyle(22, this.clr[0])
       .arc(WIDTH / 4, WIDTH / 4, WIDTH / 4, (Math.PI * 3) / 2, Math.PI * 2);
 
+    this.body = {
+      type: "doubleCircle",
+      clr1: 0,
+      clr2: 2,
+    };
     // this.addChild(this.shape1,this.shape2,this.shape3.this.shape4)
     this.addChild(this.shape1, this.shape2);
     //physics
