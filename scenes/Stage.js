@@ -64,7 +64,7 @@ export class Stage extends Container {
     if (DIFF < 0) {
       // world.position.y= this.hero.y + 5
       world.pivot.set(0, world.pivot.y + DIFF);
-      this.bg.y=world.pivot.y
+      this.bg.y = world.pivot.y;
     }
     this.gameLoop.update(deltaTime);
 
@@ -81,11 +81,11 @@ export class Stage extends Container {
     //Circle Impact Detection
     this.gameLoop.blocks.forEach((obstacle) => {
       if (!obstacle.body) return; // color changers
-      const Y = this.hero.y + this.hero.sprite.y;
-      const Y1 = obstacle.y + obstacle.shape1.y + obstacle.W / 2;
-      const Y2 = obstacle.y + (obstacle.shape1.y - obstacle.W) / 2;
       switch (obstacle.body.type) {
         case "circle":
+          const Y = this.hero.y + this.hero.sprite.y;
+          const Y1 = obstacle.y + obstacle.shape1.y + obstacle.W / 2;
+          const Y2 = obstacle.y + (obstacle.shape1.y - obstacle.W) / 2;
           if (
             ((Y > Y1 && Y < Y1 + obstacle.diam) ||
               (Y + this.hero.height > Y1 &&
@@ -105,11 +105,36 @@ export class Stage extends Container {
           break;
         case "doubleCircle":
           break;
+        case "arithmetic":
+          // ICON
+          if (
+            this.hero.sprite.y > obstacle.sign.y &&
+            this.hero.sprite.y < obstacle.sign.y + obstacle.sign.shape.height
+          ) {
+            this.hero.changeColor(0xcccccc);
+          }
+          // CHOICES
+          console.log(obstacle.choiceHeight);
+          if (
+            ((this.hero.sprite.y - this.hero.sprite.height / 2 > obstacle.y &&
+              this.hero.sprite.y - this.hero.sprite.height / 2 <
+                obstacle.y + obstacle.choiceHeight) ||
+              (this.hero.sprite.y + this.hero.height / 2 > obstacle.y &&
+                this.hero.sprite.y + this.hero.height / 2 <
+                  obstacle.y + obstacle.choiceHeight)) &&
+            obstacle.result !== obstacle.current
+          ) {
+            console.log(obstacle.result, obstacle.current);
+            this.lost = true;
+          }
+          break;
         default:
-          console.log("nuh");
-          return;
+          break;
       }
     });
+
+    /////
+    ////// Arithmetic collision detection
   }
 
   watch(el) {

@@ -204,7 +204,6 @@ export class Circle extends Container {
       this.body.clr1 = this.clr[3];
       this.body.clr2 = this.clr[1];
     }
-    console.log(this.angle, this.body.clr2, Manager.currentScene.hero.body.clr);
   }
 }
 

@@ -66,10 +66,11 @@ export class Hero extends PIXI.Container {
     if (key === "w" || key === " ") this.startJump(1);
   }
   changeColor(clr) {
+    const x = this.sprite.x;
+    const y = this.sprite.y;
     this.body.clr = clr;
-    console.log(clr);
     this.sprite.clear().beginFill(clr).drawCircle(0, 0, 15);
-    this.sprite.x = this.body.position.x - this.sprite.width / 2;
-    this.sprite.y = this.body.position.y - this.sprite.height / 2;
+    this.sprite.x = this.body.position.x;
+    this.sprite.y = this.body.position.y;
   }
 }

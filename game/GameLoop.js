@@ -14,10 +14,10 @@ export class GameLoop extends Container {
     this.stars = [];
     this.changers = [];
     this.obstacles = [
+      // //  Triangle,
       Square,
-      //  Triangle,
       Circle,
-      DoubleCircle,
+      // DoubleCircle,
     ];
 
     const star = new Star(Manager.app.stage.pivot.y);
@@ -37,6 +37,8 @@ export class GameLoop extends Container {
     if (this.blocks[this.blocks.length - 1].y > Manager.app.stage.pivot.y) {
       if (this.step === 0) {
         this.changeColor();
+      } else if (this.step === 4) {
+        this.createArithmeticBlock();
       } else if (true) {
         this.createBlock();
       }
@@ -64,10 +66,12 @@ export class GameLoop extends Container {
     this.addChild(star);
   }
   createArithmeticBlock() {
-    const block = new Arithmetic();
-
+    const block = new Arithmetic(
+      this.blocks[this.blocks.length - 1].y - this.screenHeight,
+    );
+    this.step = (this.step + 1) % 5;
     this.blocks.push(block);
-    this.addChild(Block);
+    this.addChild(block);
   }
   changeColor() {
     this.step = (this.step + 1) % 5;

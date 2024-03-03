@@ -29,7 +29,8 @@ export class Manager {
     Manager._height = height;
 
     Manager.colors = [0x5f8cff, 0xff675e, 0x9dff5a, 0xffe84f];
-    Manager.operators = ["+", "-", "*", "/"];
+    Manager.operators = ["plus", "minus", "times", "by"];
+    Manager.usedOps = new Set();
     Manager.arithmetic = {
       plus: true,
       minus: true,
