@@ -14,6 +14,7 @@ export class GameLoop extends Container {
     this.stars = [];
     this.changers = [];
     this.obstacles = [
+      // Arithmetic,
       // //  Triangle,
       Square,
       Circle,
@@ -67,7 +68,7 @@ export class GameLoop extends Container {
   }
   createArithmeticBlock() {
     const block = new Arithmetic(
-      this.blocks[this.blocks.length - 1].y - this.screenHeight,
+      this.blocks[this.blocks.length - 1].y - 240 - this.screenHeight,
     );
     this.step = (this.step + 1) % 5;
     this.blocks.push(block);

@@ -5,6 +5,7 @@ import { Background } from "../game/Background.js";
 import { Hero } from "../game/Hero.js";
 import { GameLoop } from "../game/GameLoop.js";
 import { Square } from "../game/Platforms.js";
+import { StartMenu } from "./StartMenu.js";
 import * as Filters from "pixi-filters";
 import { sound } from "@pixi/sound";
 export class Stage extends Container {
@@ -92,7 +93,7 @@ export class Stage extends Container {
                 Y + this.hero.height < Y1 + obstacle.diam)) &&
             this.hero.body.clr !== obstacle.body.clr2
           ) {
-            this.lost = true;
+            this.lose();
           }
           if (
             ((Y > Y2 && Y < Y2 + obstacle.diam) ||
@@ -100,7 +101,7 @@ export class Stage extends Container {
                 Y + this.hero.height < Y2 + obstacle.diam)) &&
             this.hero.body.clr !== obstacle.body.clr1
           ) {
-            this.lost = true;
+            this.lose();
           }
           break;
         case "doubleCircle":
@@ -154,9 +155,16 @@ export class Stage extends Container {
   interact(e) {
     const colliders = [e.pairs[0].bodyA, e.pairs[0].bodyB];
     if (colliders[0].clr !== colliders[1].clr) {
-      this.lost = true;
+      this.lose();
     }
     const hero = colliders.find((body) => body.gameHero);
     const platform = colliders.find((body) => body.ground);
+  }
+  lose() {
+    this.lost = true;
+    Manager.app.stage.pivot.set(0, 0);
+    Manager.changeScene(new StartMenu());
+    Manager.clearPhysics();
+    Manager.createPhysics();
   }
 }

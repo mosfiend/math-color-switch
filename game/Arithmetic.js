@@ -16,7 +16,7 @@ export class Arithmetic extends Container {
       fontSize: 32,
     });
     this.values = [];
-    this.icons = { plus: "+", minus: "-", times: "*", by: "/" };
+    this.icons = { plus: "+", minus: "-", times: "x", by: "/" };
     this.operands = [];
     const lenChoices = 10;
     this.result = 0;
@@ -44,15 +44,18 @@ export class Arithmetic extends Container {
     this.text.x = Manager.width / 2 - this.text.width / 2 + this.pivot.x;
     this.text.y = 120;
 
-    this.addChild(this.text, this.sign);
+    this.addChild(
+      this.text,
+      // this.sign
+    );
   }
 
   update() {
     this.choices.forEach((choice) => {
       choice.x = (choice.x + 2) % this.sceneWidth;
       if (
-        -this.pivot.x  +choice.x > this.screenWidth / 2 - choice.width &&
-        -this.pivot.x+ choice.x < this.screenWidth / 2
+        -this.pivot.x + choice.x > this.screenWidth / 2 - choice.width &&
+        -this.pivot.x + choice.x < this.screenWidth / 2
       ) {
         this.current = choice.val;
       }
@@ -113,7 +116,9 @@ export class Arithmetic extends Container {
     }
     this.values.push(this.result);
     if (String(this.result).length === 1) {
-      this.values.push(Number(String(this.result)));
+      this.values.push(
+        Number(String(this.result) * Math.trunc(Math.random() * 3)),
+      );
     } else {
       this.values.push(
         Number(String(this.result).split("").reverse().join("")),
@@ -149,3 +154,16 @@ class Choice extends Container {
 
   update() {}
 }
+// Possible ways to meet her again:
+//
+// Best courses of action (slightly delayed):
+// - Meet in OCE
+// - Message her phone (OCE does not start again)
+
+// Remote
+// Contact  through oussama
+// Contact through binome
+// Luck:
+// Meet in patho
+// Meet in faculty
+// Meet in hospital

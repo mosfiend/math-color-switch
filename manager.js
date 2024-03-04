@@ -70,6 +70,12 @@ export class Manager {
     const runner = Matter.Runner.create();
     Matter.Runner.run(runner, Manager.physics);
   }
+  static clearPhysics() {
+    Matter.World.clear(Manager.physics.world);
+    Matter.Engine.clear(Manager.physics);
+    Manager.physics = null;
+    // Notice how runner may still be running the old physics instance
+  }
 
   static update(deltaTime) {
     // Group.shared.update(); For your tweens
