@@ -36,19 +36,10 @@ export class Star extends Container {
     this.x = Manager.width / 2;
     this.y = y;
     this.clr = Manager.colors;
-    this.shape = new Graphics()
-      .lineTo(0, 0)
-      .beginFill(this.clr[0])
-      .arc(0, 0, 27, 0, Math.PI / 2)
-      .lineTo(0, 0)
-      .beginFill(this.clr[2])
-      .arc(0, 0, 27, Math.PI / 2, Math.PI)
-      .lineTo(0, 0)
-      .beginFill(this.clr[1])
-      .arc(0, 0, 27, Math.PI, (Math.PI * 3) / 2)
-      .lineTo(0, 0)
-      .beginFill(this.clr[3])
-      .arc(0, 0, 27, (Math.PI * 3) / 2, Math.PI * 2);
+    this.shape = Sprite.from("star");
+        this.shape.anchor.set(0.5,0.5)
+    const SCALE = 30 / this.shape.width;
+    this.shape.scale.set(SCALE, SCALE);
     this.addChild(this.shape);
   }
 

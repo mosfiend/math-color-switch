@@ -16,6 +16,7 @@ export class Hero extends Container {
     this.sprite.x = this.screenWidth / 2 - this.sprite.width / 2;
     this.sprite.y = this.screenHeight * 0.8;
     this.transSprite = new Graphics();
+    this.imploded = false;
     this.addChild(this.transSprite, this.sprite);
     // physics
     this.body = Matter.Bodies.circle(
@@ -37,21 +38,18 @@ export class Hero extends Container {
   }
 
   update(deltaTime) {
-    const v = Matter.Body.getVelocity(this.body);
-    this.dy = v.y;
-    this.sprite.x = this.body.position.x;
-    this.sprite.y = this.body.position.y;
-    Matter.Body.setAngle(this.body, 0);
-    if (this.keySet.has("a") || this.keySet.has("ArrowLeft")) this.startJump();
-
-    this.sprite.x = this.body.position.x;
-    this.sprite.y = this.body.position.y;
-    this.transSprite.x = this.body.position.x;
-    this.transSprite.y = this.body.position.y;
     this.fragments.forEach((frag) => {
       frag.x = frag.body.position.x;
       frag.y = frag.body.position.y;
     });
+    if (this.imploded) return;
+    const v = Matter.Body.getVelocity(this.body);
+    this.dy = v.y;
+    Matter.Body.setAngle(this.body, 0);
+    this.sprite.x = this.body.position.x;
+    this.sprite.y = this.body.position.y;
+    this.transSprite.x = this.body.position.x;
+    this.transSprite.y = this.body.position.y;
   }
 
   interact(e) {
@@ -74,7 +72,7 @@ export class Hero extends Container {
   }
   handleEvent(key, keySet) {
     this.keySet = keySet;
-    if (key === "w" || key === " ") this.startJump(1);
+    if (key === " ") this.startJump(1);
   }
   changeColor(clr) {
     const x = this.sprite.x;
@@ -99,12 +97,16 @@ export class Hero extends Container {
       .start();
   }
   implode() {
+        if (this.imploded) return
     this.sprite.clear();
-    for (let i = 0; i < Math.random() * 7 + 4; i++) {
+    this.transSprite.clear();
+    this.sprite.alpha = 0;
+    for (let i = 0; i < Math.random() * 10 + 10; i++) {
       const frag = this.makeFragment();
       this.fragments.push(frag);
       this.addChild(frag);
     }
+    this.imploded = true;
   }
   makeFragment() {
     const clr = [...Manager.colors];
@@ -115,7 +117,7 @@ export class Hero extends Container {
       .drawCircle(
         this.x + this.sprite.x - dim + 2 * Math.random() * dim,
         this.y + this.sprite.y - dim + 2 * Math.random() * dim,
-        Math.random() * 5 + 3,
+        Math.random() * 6 + 4,
       );
 
     fragment.body = Matter.Bodies.circle(
