@@ -1,6 +1,7 @@
 import * as PIXI from "pixi.js";
 import Matter from "matter-js";
 import { Stage } from "./scenes/Stage";
+import { Group } from "tweedle.js";
 
 export class Manager {
   constructor() {}
@@ -78,7 +79,7 @@ export class Manager {
   }
 
   static update(deltaTime) {
-    // Group.shared.update(); For your tweens
+    Group.shared.update();
     if (Manager.currentScene != undefined) {
       Manager.currentScene.update(deltaTime);
     }

@@ -9,6 +9,7 @@ export class Square extends Container {
     //graphics
     this.screenWidth = Manager.width;
     this.screenHeight = Manager.height;
+    this.x = this.screenWidth / 2;
     this.y = y;
     this.clr = Manager.colors;
     const HEIGHT = 25;
@@ -40,7 +41,6 @@ export class Square extends Container {
       this.shape4,
       this.shape1Bis,
     );
-    this.x = this.screenWidth / 2;
     this.pivot.set(WIDTH / 2 + HEIGHT / 2, WIDTH / 2 + HEIGHT / 2);
 
     this.body = Matter.Composite.create();
@@ -105,29 +105,30 @@ export class Square extends Container {
 
 export class Triangle extends Container {
   // The physics is implemented into the graphics object
-  constructor(x, y, width, height, clr) {
+  constructor(y) {
     super();
     //graphics
     this.screenWidth = Manager.width;
     this.screenHeight = Manager.height;
-    this.x = x;
+    this.x = this.screenWidth / 2;
     this.y = y;
     this.clr = [...Manager.colors];
     this.clr.splice(Math.trunc(Math.random() * 4), 1);
-    const WIDTH = this.screenWidth / 4;
+    const HEIGHT = 20;
+    const WIDTH = 270 + HEIGHT;
     this.shape1 = new Graphics()
       .beginFill(this.clr[0])
-      .drawRect(0, 0, WIDTH, 20);
+      .drawRoundedRect(0, 0, WIDTH, HEIGHT, 20);
     this.shape2 = new Graphics()
       .beginFill(this.clr[1])
-      .drawRect(0, 0, WIDTH + 28, 20);
+      .drawRoundedRect(0, 0, WIDTH, HEIGHT, HEIGHT, 20);
     this.shape3 = new Graphics()
       .beginFill(this.clr[2])
-      .drawRect(0, 0, WIDTH + 20, 20);
+      .drawRoundedRect(0, 0, WIDTH, HEIGHT, 20);
     this.shape2.angle = 60;
     this.shape3.angle = -60;
-    this.shape3.x = Math.cos(Math.PI / 3) * (WIDTH - 20);
-    this.shape3.y = Math.sin(Math.PI / 3) * (WIDTH + 20);
+    this.shape3.x = Math.cos(Math.PI / 3) * WIDTH;
+    this.shape3.y = Math.sin(Math.PI / 3) * WIDTH;
     this.addChild(this.shape1, this.shape3, this.shape2);
     //physics
     // this.body = Matter.Bodies.rectangle(
@@ -140,13 +141,22 @@ export class Triangle extends Container {
     // Matter.World.add(Manager.physics.world, this.body);
     // this.body.gamePlatform = this; // why am i using this
 
-    Math.sin(Math.PI / 3) * WIDTH;
-    this.pivot.set(WIDTH / 2, (Math.sin(Math.PI / 3) * WIDTH) / 2);
+    this.addChild(
+      new Graphics()
+        .beginFill(0xff0000)
+        .drawCircle(WIDTH / 2 - HEIGHT, WIDTH / 2, 31),
+    );
+
+    this.pivot
+      .set
+      // WIDTH / 2-HEIGHT,
+      // WIDTH / 2 - HEIGHT,
+      ();
     this.dx = 1;
     this.dy = 10;
   }
   update(deltaTime) {
-    this.angle += 1;
+    // this.angle += 1;
   }
 }
 

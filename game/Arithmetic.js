@@ -16,7 +16,7 @@ export class Arithmetic extends Container {
       fontSize: 32,
     });
     this.values = [];
-    this.icons = { plus: "+", minus: "-", times: "x", by: "/" };
+    this.icons = { plus: "+", minus: "-", times: "x", by: "÷" };
     this.operands = [];
     const lenChoices = 10;
     this.result = 0;

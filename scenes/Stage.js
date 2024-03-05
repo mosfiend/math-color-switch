@@ -110,12 +110,14 @@ export class Stage extends Container {
           // ICON
           if (
             this.hero.sprite.y > obstacle.sign.y &&
-            this.hero.sprite.y < obstacle.sign.y + obstacle.sign.shape.height
+            this.hero.sprite.y < obstacle.sign.y + obstacle.sign.shape.height &&
+            !obstacle.touched
           ) {
+            console.log("again");
+            obstacle.touched = true;
             this.hero.changeColor(0xcccccc);
           }
           // CHOICES
-          console.log(obstacle.choiceHeight);
           if (
             ((this.hero.sprite.y - this.hero.sprite.height / 2 > obstacle.y &&
               this.hero.sprite.y - this.hero.sprite.height / 2 <
@@ -126,7 +128,7 @@ export class Stage extends Container {
             obstacle.result !== obstacle.current
           ) {
             console.log(obstacle.result, obstacle.current);
-            this.lost = true;
+                        this.hero.implode()
           }
           break;
         default:

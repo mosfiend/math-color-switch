@@ -32,14 +32,11 @@ export class StartMenu extends Container {
       for (let operator in Manager.arithmetic) {
         if (Manager.arithmetic[operator]) {
           operators.push(operator);
-          console.log("huh", operators);
         } else {
-          console.log(Manager.arithmetic[operator]);
         }
       }
 
       Manager.operators = operators;
-      console.log(Manager.operators);
       Manager.changeScene(new Stage());
     });
     playButton.on("pointerover", () => {

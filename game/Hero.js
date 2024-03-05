@@ -1,19 +1,22 @@
-import * as PIXI from "pixi.js";
+import { Graphics, Container } from "pixi.js";
 import Matter from "matter-js";
 import { Manager } from "../manager";
-export class Hero extends PIXI.Container {
+import { Tween } from "tweedle.js";
+export class Hero extends Container {
   constructor(x, y, keySet) {
     super();
     this.screenWidth = Manager.width;
     this.screenHeight = Manager.height;
     const KAHLER = Manager.colors[Math.trunc(Math.random() * 4)];
+    this.diam = 15;
     this.keySet = keySet;
     // graphics
-    this.sprite = new PIXI.Graphics().beginFill(KAHLER).drawCircle(0, 0, 15);
+    this.sprite = new Graphics().beginFill(KAHLER).drawCircle(0, 0, this.diam);
     // this.sprite.x = this.screenWidth / 2 + this.screenWidth / 8 - 5;
     this.sprite.x = this.screenWidth / 2 - this.sprite.width / 2;
     this.sprite.y = this.screenHeight * 0.8;
-    this.addChild(this.sprite);
+    this.transSprite = new Graphics();
+    this.addChild(this.transSprite, this.sprite);
     // physics
     this.body = Matter.Bodies.circle(
       this.sprite.x + this.sprite.width / 2,
@@ -29,6 +32,8 @@ export class Hero extends PIXI.Container {
     this.maxJumps = 2;
     this.jumpIndex = 0;
     this.maxSpeed = 5;
+
+    this.fragments = [];
   }
 
   update(deltaTime) {
@@ -41,6 +46,12 @@ export class Hero extends PIXI.Container {
 
     this.sprite.x = this.body.position.x;
     this.sprite.y = this.body.position.y;
+    this.transSprite.x = this.body.position.x;
+    this.transSprite.y = this.body.position.y;
+    this.fragments.forEach((frag) => {
+      frag.x = frag.body.position.x;
+      frag.y = frag.body.position.y;
+    });
   }
 
   interact(e) {
@@ -68,9 +79,52 @@ export class Hero extends PIXI.Container {
   changeColor(clr) {
     const x = this.sprite.x;
     const y = this.sprite.y;
+    this.transSprite.clear().beginFill(this.body.clr).drawCircle(0, 0, 15);
+    // this.transSprite.alpha = 1;
+    this.transSprite.x = this.body.position.x;
+    this.transSprite.y = this.body.position.y;
+    console.log(this.body.clr);
     this.body.clr = clr;
     this.sprite.clear().beginFill(clr).drawCircle(0, 0, 15);
+    this.sprite.alpha = 0;
     this.sprite.x = this.body.position.x;
     this.sprite.y = this.body.position.y;
+    console.log(this.body.clr);
+    const tween = new Tween(this.sprite)
+      .to({ alpha: 1 }, 500)
+      .onUpdate(() => {})
+      .onComplete(() => {
+        // this.transSprite.alpha = 0;
+      })
+      .start();
+  }
+  implode() {
+    this.sprite.clear();
+    for (let i = 0; i < Math.random() * 7 + 4; i++) {
+      const frag = this.makeFragment();
+      this.fragments.push(frag);
+      this.addChild(frag);
+    }
+  }
+  makeFragment() {
+    const clr = [...Manager.colors];
+    clr.push(0xcccccc);
+    const dim = (1 / Math.sqrt(2)) * this.diam;
+    const fragment = new Graphics()
+      .beginFill(clr[Math.trunc(Math.random() * 5)])
+      .drawCircle(
+        this.x + this.sprite.x - dim + 2 * Math.random() * dim,
+        this.y + this.sprite.y - dim + 2 * Math.random() * dim,
+        Math.random() * 5 + 3,
+      );
+
+    fragment.body = Matter.Bodies.circle(
+      fragment.x + fragment.width / 2,
+      fragment.y + fragment.height / 2,
+      fragment.width / 2,
+      { friction: 0 },
+    );
+    Matter.World.add(Manager.physics.world, fragment.body);
+    return fragment;
   }
 }
