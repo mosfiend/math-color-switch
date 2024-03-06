@@ -14,10 +14,10 @@ export class GameLoop extends Container {
     this.stars = [];
     this.changers = [];
     this.obstacles = [
-      Arithmetic,
+    //  Arithmetic,
       // Triangle,
-      // Square,
-      // Circle,
+      Square,
+       Circle,
       // DoubleCircle,
     ];
 
