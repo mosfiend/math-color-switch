@@ -163,7 +163,7 @@ export class Stage extends Container {
     const platform = colliders.find((body) => body.ground);
   }
   lose() {
-    this.lost = true;
+    this.hero.implode()
     Manager.app.stage.pivot.set(0, 0);
     Manager.changeScene(new StartMenu());
     Manager.clearPhysics();
