@@ -44,8 +44,8 @@ export class Manager {
     Manager.app = new PIXI.Application({
       view: document.getElementById("pixi-canvas"),
       resizeTo: document.getElementById("parent-div"), // This line here handles the actual resize!
-      // resolution: window.devicePixelRatio || 1,
-      // autoDensity: true,
+      resolution: window.devicePixelRatio || 1,
+      autoDensity: true,
       antialias: true,
       backgroundColor: background,
     });
