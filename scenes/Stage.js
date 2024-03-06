@@ -1,13 +1,15 @@
 import { Container, Graphics, Text } from "pixi.js";
 import Matter from "matter-js";
+import * as Filters from "pixi-filters";
+import { sound } from "@pixi/sound";
 import { Manager } from "../manager.js";
 import { Background } from "../game/Background.js";
 import { Hero } from "../game/Hero.js";
 import { GameLoop } from "../game/GameLoop.js";
 import { Square } from "../game/Platforms.js";
+import { GameOver } from "../game/GameOver.js";
 import { StartMenu } from "./StartMenu.js";
-import * as Filters from "pixi-filters";
-import { sound } from "@pixi/sound";
+
 export class Stage extends Container {
   constructor() {
     super();
@@ -55,11 +57,11 @@ export class Stage extends Container {
     this.screenHeight = newHeight;
   }
   update(deltaTime) {
+    this.hero.update(deltaTime);
     if (this.lost) return;
     this.handleEvent();
     this.text.text = Math.trunc(this.hero.sprite.y);
     this.bg.update(deltaTime);
-    this.hero.update(deltaTime);
     const world = Manager.app.stage;
     const DIFF = this.hero.sprite.y - (this.screenHeight / 2 + world.pivot.y);
     if (DIFF < 0) {
@@ -128,7 +130,7 @@ export class Stage extends Container {
             obstacle.result !== obstacle.current
           ) {
             console.log(obstacle.result, obstacle.current);
-                        this.hero.implode()
+            this.lose();
           }
           break;
         default:
@@ -163,10 +165,12 @@ export class Stage extends Container {
     const platform = colliders.find((body) => body.ground);
   }
   lose() {
+    this.hero.implode();
     this.lost = true;
-    Manager.app.stage.pivot.set(0, 0);
-    Manager.changeScene(new StartMenu());
-    Manager.clearPhysics();
-    Manager.createPhysics();
+    this.addChild(new GameOver());
+    // Manager.app.stage.pivot.set(0, 0);
+    // Manager.changeScene(new StartMenu());
+    // Manager.clearPhysics();
+    // Manager.createPhysics();
   }
 }

@@ -1,6 +1,5 @@
 import { Container, Graphics } from "pixi.js";
 import { Manager } from "../manager";
-import { Selection } from "./Buttons";
 
 export class Menu extends Container {
   constructor() {
