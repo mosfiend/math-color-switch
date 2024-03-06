@@ -82,6 +82,12 @@ export class Stage extends Container {
     });
 
     //Circle Impact Detection
+    if (
+      this.hero.y + this.hero.sprite.y + this.hero.height * 2 >
+      Manager.app.stage.pivot.y + this.screenHeight
+    ) {
+      this.lose();
+    }
     this.gameLoop.blocks.forEach((obstacle) => {
       if (!obstacle.body) return; // color changers
       switch (obstacle.body.type) {
@@ -167,7 +173,7 @@ export class Stage extends Container {
   lose() {
     this.hero.implode();
     this.lost = true;
-    this.addChild(new GameOver());
+    // this.addChild(new GameOver());
     // Manager.app.stage.pivot.set(0, 0);
     // Manager.changeScene(new StartMenu());
     // Manager.clearPhysics();

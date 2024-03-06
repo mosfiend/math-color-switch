@@ -59,7 +59,7 @@ export class Hero extends Container {
     const platform = colliders.find((body) => body.ground);
   }
   startJump() {
-    Matter.Body.setVelocity(this.body, { x: this.dx, y: -10 });
+    Matter.Body.setVelocity(this.body, { x: this.dx, y: -8 });
     const v = Matter.Body.getVelocity(this.body);
     this.dy = v.y;
   }
@@ -77,13 +77,16 @@ export class Hero extends Container {
   changeColor(clr) {
     const x = this.sprite.x;
     const y = this.sprite.y;
-    this.transSprite.clear().beginFill(this.body.clr).drawCircle(0, 0, 15);
+    this.transSprite
+      .clear()
+      .beginFill(this.body.clr)
+      .drawCircle(0, 0, this.diam);
     // this.transSprite.alpha = 1;
     this.transSprite.x = this.body.position.x;
     this.transSprite.y = this.body.position.y;
     console.log(this.body.clr);
     this.body.clr = clr;
-    this.sprite.clear().beginFill(clr).drawCircle(0, 0, 15);
+    this.sprite.clear().beginFill(clr).drawCircle(0, 0, this.diam);
     this.sprite.alpha = 0;
     this.sprite.x = this.body.position.x;
     this.sprite.y = this.body.position.y;
@@ -96,6 +99,7 @@ export class Hero extends Container {
       })
       .start();
   }
+
   implode() {
     if (this.imploded) return;
     this.sprite.clear();
@@ -105,9 +109,15 @@ export class Hero extends Container {
       const frag = this.makeFragment();
       this.fragments.push(frag);
       this.addChild(frag);
+
+      Matter.Body.setVelocity(frag.body, {
+        x: 5 - Math.random() * 10,
+        y: 10 - Math.random() * 20,
+      });
     }
     this.imploded = true;
   }
+
   makeFragment() {
     const clr = [...Manager.colors];
     clr.push(0xcccccc);
@@ -117,7 +127,7 @@ export class Hero extends Container {
       .drawCircle(
         this.x + this.sprite.x - dim + 2 * Math.random() * dim,
         this.y + this.sprite.y - dim + 2 * Math.random() * dim,
-        Math.random() * 6 + 4,
+        Math.random() * 4 + 4,
       );
 
     fragment.body = Matter.Bodies.circle(

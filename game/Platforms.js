@@ -12,8 +12,8 @@ export class Square extends Container {
     this.x = this.screenWidth / 2;
     this.y = y;
     this.clr = Manager.colors;
-    const HEIGHT = 25;
-    const WIDTH = 190 + HEIGHT;
+    const HEIGHT = 20;
+    const WIDTH = 150 + HEIGHT;
     this.W = WIDTH;
     this.diam = HEIGHT;
     this.shape1 = new Graphics()
