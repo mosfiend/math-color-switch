@@ -11,12 +11,14 @@ export class Manager {
 
   // With getters but not setters, these variables become read-only
   static get width() {
+    return 400;
     return Math.max(
       document.documentElement.clientWidth,
       window.innerWidth || 0,
     );
   }
   static get height() {
+    return 640;
     return Math.max(
       document.documentElement.clientHeight,
       window.innerHidth || 0,
@@ -41,15 +43,16 @@ export class Manager {
     // Create our pixi app
     Manager.app = new PIXI.Application({
       view: document.getElementById("pixi-canvas"),
-      resizeTo: window, // This line here handles the actual resize!
-      resolution: window.devicePixelRatio || 1,
-      autoDensity: true,
+      resizeTo: document.getElementById("parent-div"), // This line here handles the actual resize!
+      // resolution: window.devicePixelRatio || 1,
+      // autoDensity: true,
       antialias: true,
       backgroundColor: background,
     });
     Manager.app.ticker.add(Manager.update);
     window.addEventListener("resize", Manager.resize);
     globalThis.__PIXI_APP__ = Manager.app;
+    console.log(Manager.app.view, Manager.app.renderer);
   }
 
   static resize() {

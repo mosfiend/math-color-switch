@@ -8,7 +8,7 @@ export class Hero extends Container {
     this.screenWidth = Manager.width;
     this.screenHeight = Manager.height;
     const KAHLER = Manager.colors[Math.trunc(Math.random() * 4)];
-    this.diam = 15;
+    this.diam = 12;
     this.keySet = keySet;
     // graphics
     this.sprite = new Graphics().beginFill(KAHLER).drawCircle(0, 0, this.diam);
@@ -97,7 +97,7 @@ export class Hero extends Container {
       .start();
   }
   implode() {
-        if (this.imploded) return
+    if (this.imploded) return;
     this.sprite.clear();
     this.transSprite.clear();
     this.sprite.alpha = 0;

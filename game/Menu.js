@@ -10,8 +10,8 @@ export class Menu extends Container {
 
     this.bg = new Graphics()
       .beginFill(0x000000)
-      .drawRect(0, 0, this.screenWidth, (this.screenHeight * 2) / 3);
-    this.bg.y = this.screenHeight / 6 + Manager.app.stage.pivot.y;
+      .drawRect(0, 0, this.screenWidth, this.screenHeight);
+    this.bg.y = Manager.app.stage.pivot.y;
     this.bg.alpha = 0.6;
     this.addChild(this.bg);
   }

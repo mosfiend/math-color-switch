@@ -177,17 +177,17 @@ export class Circle extends Container {
       clr2: this.clr[2],
     };
 
-    const WIDTH = 295;
+    const WIDTH = 190;
     this.W = WIDTH;
-    this.diam = 25;
+    this.diam = 20;
     this.shape1 = new Graphics()
-      .lineStyle(25, this.clr[0])
+      .lineStyle(this.diam, this.clr[0])
       .arc(WIDTH / 2, WIDTH / 2, WIDTH / 2, -0.01, Math.PI / 2 + 0.1)
-      .lineStyle(25, this.clr[1])
+      .lineStyle(this.diam, this.clr[1])
       .arc(WIDTH / 2, WIDTH / 2, WIDTH / 2, Math.PI / 2, Math.PI + 0.1)
-      .lineStyle(25, this.clr[2])
+      .lineStyle(this.diam, this.clr[2])
       .arc(WIDTH / 2, WIDTH / 2, WIDTH / 2, Math.PI, (Math.PI * 3) / 2 + 0.1)
-      .lineStyle(25, this.clr[3])
+      .lineStyle(this.diam, this.clr[3])
       .arc(WIDTH / 2, WIDTH / 2, WIDTH / 2, (Math.PI * 3) / 2, Math.PI * 2);
 
     this.addChild(this.shape1);

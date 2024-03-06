@@ -8,6 +8,22 @@
   </head>
   <body>
     <script type="module" src="/main.js"></script>
-    <canvas id="pixi-canvas" tabindex="0" width="400" height="640"></canvas>
+    <div
+      style="
+        width: 100vw;
+        padding: 0;
+        margin: 0;
+        display: flex;
+        justify-content: space-around;
+        align-items: flex-start;
+      "
+    >
+      <div
+        id="parent-div"
+        style="padding: 0; margin: 0; max-width: 400px; max-height: 640px"
+      >
+        <canvas id="pixi-canvas" tabindex="0" width="400" height="640"></canvas>
+      </div>
+    </div>
   </body>
 </html>
