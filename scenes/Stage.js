@@ -1,6 +1,5 @@
 import { Container, Graphics, Text } from "pixi.js";
 import Matter from "matter-js";
-import * as Filters from "pixi-filters";
 import { sound } from "@pixi/sound";
 import { Manager } from "../manager.js";
 import { Background } from "../game/Background.js";
@@ -15,9 +14,14 @@ export class Stage extends Container {
     super();
     this.screenWidth = Manager.width;
     this.screenHeight = Manager.height;
-    this.filter = new Filters.AsciiFilter();
     this.keySet = new Set();
-    this.writerMode = false;
+    this.released = true;
+    this.score = 0;
+    this.addChild(
+      new Graphics()
+        .beginFill(0xff0000)
+        .drawRect(this.screenWidth / 2, 0, 1, 1000),
+    );
     // this.theme = sound._sounds.around;
     // this.theme.volume = 0.05;
     // this.lost = false;
@@ -26,11 +30,13 @@ export class Stage extends Container {
     /// ELEMENTS
 
     this.hero = new Hero(this.screenWidth / 2, 150, this.keySet);
-    this.text = new Text(this.hero.sprite.y, { fill: 0xffffff });
-    this.text.y = this.hero.sprite.y;
+    this.scoreBoard = new Text(this.hero.sprite.y, { fill: 0xffffff });
+
+    this.scoreBoard.x = 15;
+    this.scoreBoard.y = Manager.app.stage.pivot.y + 15;
     this.bg = new Background(this.screenHeight);
     this.gameLoop = new GameLoop();
-    this.addChild(this.bg, this.gameLoop, this.hero, this.text);
+    this.addChild(this.bg, this.gameLoop, this.hero, this.scoreBoard);
     this.interactive = true;
     // make entire screen interactive
     this.on("pointerdown", () => {
@@ -60,7 +66,8 @@ export class Stage extends Container {
     this.hero.update(deltaTime);
     if (this.lost) return;
     this.handleEvent();
-    this.text.text = Math.trunc(this.hero.sprite.y);
+    this.scoreBoard.text = Math.trunc(this.score);
+    this.scoreBoard.y = Manager.app.stage.pivot.y + 15;
     this.bg.update(deltaTime);
     const world = Manager.app.stage;
     const DIFF = this.hero.sprite.y - (this.screenHeight / 2 + world.pivot.y);
@@ -72,6 +79,18 @@ export class Stage extends Container {
     this.gameLoop.update(deltaTime);
 
     //COLOR SWITCH
+
+    this.gameLoop.stars.forEach((star) => {
+      if (
+        this.hero.sprite.y > star.y &&
+        this.hero.sprite.y < star.y + star.height
+      ) {
+        if (!star.imploded) this.score++;
+        star.activate();
+      }
+      star.update();
+    });
+
     this.gameLoop.changers.forEach((changer) => {
       if (
         this.hero.sprite.y > changer.y &&
@@ -140,6 +159,7 @@ export class Stage extends Container {
           }
           break;
         default:
+          console.log("defer and refer", obstacle);
           break;
       }
     });
@@ -151,15 +171,17 @@ export class Stage extends Container {
   watch(el) {
     el.addEventListener("keydown", (e) => {
       this.keySet.add(e.key);
+      if (e.key === " ") this.released = false;
       this.handleEvent(e.key);
     });
     el.addEventListener("keyup", (e) => {
+      if (e.key === " ") this.released = true;
       this.keySet.delete(e.key);
     });
   }
 
   handleEvent(key) {
-    this.hero.handleEvent(key, this.keySet);
+    this.hero.handleEvent(key, this.released);
   }
 
   interact(e) {

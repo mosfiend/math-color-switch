@@ -9,16 +9,18 @@ export class StartMenu extends Container {
     this.screenHeight = Manager.height;
     this.logo = Sprite.from("logo");
     this.title = Sprite.from("title");
-    this.logo.x = this.screenWidth / 2;
-    this.logo.y = this.screenHeight * 0.8;
-    this.title.x = this.screenWidth / 2;
-    this.title.y = this.screenHeight * 0.2;
-    this.logo.anchor.set(0.5, 0.5);
-    this.title.anchor.set(0.5, 0.5);
-    this.title.scale.set(0.6, 0.6);
-    this.logo.scale.set(0.6, 0.6);
-    this.menuBox = new Container();
-    this.menuBox.position.set(this.screenWidth / 2, this.screenHeight / 2);
+    this.title.y = 20;
+    const SCALE = this.screenWidth / this.title.width;
+    const LOGSCALE = this.screenHeight / 3 / this.logo.height;
+    console.log(SCALE);
+    // this.title.anchor.set(0.5, 0.5);
+    this.title.scale.set(SCALE, SCALE);
+    this.logo.scale.set(LOGSCALE, LOGSCALE);
+    this.logo.x = this.screenWidth / 2 - this.logo.width / 2;
+    this.logo.y = this.screenHeight - this.logo.height - 40;
+    this.play = new Container();
+    this.play.x = this.screenWidth / 2;
+    this.play.y = this.screenHeight / 2 + 25;
     this.background = new Graphics()
       .beginFill(0xcee7e1)
       .drawRect(0, 0, this.screenWidth, this.screenHeight);
@@ -26,8 +28,9 @@ export class StartMenu extends Container {
     const playButton = new Graphics()
       .beginFill(0x231f20)
       .drawRoundedRect(-150, -35, 300, 60, 15);
-    playButton.interactive = true;
+    playButton.eventMode = "static";
     playButton.buttonMode = true;
+
     playButton.on("pointerdown", () => {
       const operators = [];
       for (let operator in Manager.arithmetic) {
@@ -46,7 +49,7 @@ export class StartMenu extends Container {
     playButton.on("pointerout", () => {
       playButton.cursor = "default";
     });
-    this.menuBox.addChild(playButton);
+    this.play.addChild(playButton);
     // Create a play button text
     const buttonText = new Text("Play", {
       fontSize: 32,
@@ -55,20 +58,18 @@ export class StartMenu extends Container {
     });
     buttonText.anchor.set(0.5, 0.5);
     buttonText.position.set(0, -10);
-    this.menuBox.addChild(buttonText);
+    this.play.addChild(buttonText);
 
     this.selection = new Selection();
     this.selection.x = this.screenWidth / 2 - this.selection.width / 2;
     this.selection.y = this.screenHeight * 0.35;
     this.addChild(
       this.background,
-      this.menuBox,
+      this.play,
       this.logo,
       this.title,
       this.selection,
     );
-    this.logo.x = this.screenWidth / 2;
-    this.logo.y = this.screenHeight * 0.8;
   }
 
   transitionIn() {

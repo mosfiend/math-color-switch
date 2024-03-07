@@ -1,10 +1,13 @@
+import Matter from "matter-js";
 import { Container, Graphics, Sprite } from "pixi.js";
 import { Manager } from "../manager";
+import { Tween } from "tweedle.js";
 export class ColorChanger extends Container {
   constructor(y) {
     super();
     this.x = Manager.width / 2;
     this.y = y;
+    this.imploded = false;
     this.clr = Manager.colors;
     this.diam = 27;
     this.mainClr = Manager.colors[Math.trunc(Math.random() * 4)];
@@ -36,47 +39,46 @@ export class Star extends Container {
     this.x = Manager.width / 2;
     this.y = y;
     this.clr = Manager.colors;
-    this.shape = Sprite.from("star");
-    this.shape.anchor.set(0.5, 0.5);
-    const SCALE = 30 / this.shape.width;
-    this.shape.scale.set(SCALE, SCALE);
-    this.addChild(this.shape);
+    this.sprite = Sprite.from("star");
+    this.sprite.anchor.set(0.5, 0.5);
+    const SCALE = 30 / this.sprite.width;
+    this.sprite.scale.set(SCALE, SCALE);
+    this.addChild(this.sprite);
+    this.frags = [];
   }
 
-  update() {}
+  update() {
+    this.frags.forEach((frag) => {
+      frag.x = frag.body.position.x;
+      frag.y = frag.body.position.y;
+    });
+  }
 
   activate() {
-    this.clear();
-    this.shape.clear();
-    for (let i = 0; i < Math.random() * 10 + 10; i++) {
-      const frag = this.makeFragment();
-      this.fragments.push(frag);
-      this.addChild(frag);
-
-      Matter.Body.setVelocity(frag.body, {
-        x: 5 - Math.random() * 10,
-        y: 10 - Math.random() * 20,
-      });
-    }
+    if (this.imploded) return;
     this.imploded = true;
+    this.sprite.alpha = 0;
+    for (let i = 0; i < Math.random() * 10 + 20; i++) {
+      const frag = this.makeFragment();
+      this.frags.push(frag);
+      this.addChild(frag);
+    }
+    // this.imploded = true;
   }
   makeFragment() {
-    const clr = [...Manager.colors];
-    clr.push(0xcccccc);
     const dim = (1 / Math.sqrt(2)) * this.diam;
-    const fragment = new Sprite()
-      .beginFill(clr[Math.trunc(Math.random() * 5)])
-      .drawCircle(
-        this.x + this.sprite.x - 10 + 2 * Math.random() * 10,
-        this.y + this.sprite.y - 10 + 2 * Math.random() * 10,
-        Math.random() * 4 + 4,
-      );
-
+    const fragment = Sprite.from("star");
+    fragment.x = this.sprite.x / 2 - 20 + 2 * Math.random() * 20;
+    fragment.y = this.sprite.y - 25 + 2 * Math.random() * 25;
+    const size = 9;
+    fragment.width = size;
+    fragment.height = size;
+    // Math.random() * 4 + 4,
     fragment.body = Matter.Bodies.circle(
       fragment.x + fragment.width / 2,
       fragment.y + fragment.height / 2,
       fragment.width / 2,
-      { friction: 0 },
+      { friction: 0, isSensor: true },
     );
     Matter.World.add(Manager.physics.world, fragment.body);
     return fragment;

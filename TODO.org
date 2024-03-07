@@ -3,16 +3,16 @@
 * DONE Color Switch
 * TODO Game Logic
     * [ ] Procedurally generated stages
-* TODO Arithmetics
-    * [ ] Addition
-    * [ ] Subtraction
-    * [ ] Division
-    * [ ] Multiplication
+* DONE Arithmetics
+    * [x] Addition
+    * [x] Subtraction
+    * [x] Division
+    * [x] Multiplication
 * TODO UI
-    * [ ] Select operations
-    * [ ] Put logo on the game
+    * [x] Select operations
+    * [x] Put logo on the game
     * [ ] Add a dutch version
-    * [ ] Resize it appropriately
+    * [x] Resize it appropriately
 
 
 
