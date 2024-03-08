@@ -224,31 +224,33 @@ export class DoubleCircle extends Container {
     this.x = this.screenWidth / 2;
     this.y = y;
     this.clr = Manager.colors;
-    const WIDTH = this.screenWidth / 4;
+    const WIDTH = 150;
+    this.W = WIDTH;
+    this.diam = 18;
     this.shape1 = new Graphics()
-      .lineStyle(22, this.clr[0])
-      .arc(WIDTH / 4, WIDTH / 4, WIDTH / 4, 0, Math.PI / 2)
-      .lineStyle(22, this.clr[1])
-      .arc(WIDTH / 4, WIDTH / 4, WIDTH / 4, Math.PI / 2, Math.PI)
-      .lineStyle(22, this.clr[2])
-      .arc(WIDTH / 4, WIDTH / 4, WIDTH / 4, Math.PI, (Math.PI * 3) / 2)
-      .lineStyle(22, this.clr[3])
-      .arc(WIDTH / 4, WIDTH / 4, WIDTH / 4, (Math.PI * 3) / 2, Math.PI * 2);
+      .lineStyle(18, this.clr[0])
+      .arc(WIDTH / 2, WIDTH / 2, WIDTH / 2, 0, Math.PI / 2)
+      .lineStyle(18, this.clr[1])
+      .arc(WIDTH / 2, WIDTH / 2, WIDTH / 2, Math.PI / 2, Math.PI)
+      .lineStyle(18, this.clr[2])
+      .arc(WIDTH / 2, WIDTH / 2, WIDTH / 2, Math.PI, (Math.PI * 3) / 2)
+      .lineStyle(18, this.clr[3])
+      .arc(WIDTH / 2, WIDTH / 2, WIDTH / 2, (Math.PI * 3) / 2, Math.PI * 2);
     // this.shape1.angle=90
     this.shape2 = new Graphics()
-      .lineStyle(22, this.clr[3])
-      .arc(WIDTH / 4, WIDTH / 4, WIDTH / 4, 0, Math.PI / 2)
-      .lineStyle(22, this.clr[2])
-      .arc(WIDTH / 4, WIDTH / 4, WIDTH / 4, Math.PI / 2, Math.PI)
-      .lineStyle(22, this.clr[1])
-      .arc(WIDTH / 4, WIDTH / 4, WIDTH / 4, Math.PI, (Math.PI * 3) / 2)
-      .lineStyle(22, this.clr[0])
-      .arc(WIDTH / 4, WIDTH / 4, WIDTH / 4, (Math.PI * 3) / 2, Math.PI * 2);
-
+      .lineStyle(18, this.clr[3])
+      .arc(WIDTH / 2, WIDTH / 2, WIDTH / 2, 0, Math.PI / 2)
+      .lineStyle(18, this.clr[2])
+      .arc(WIDTH / 2, WIDTH / 2, WIDTH / 2, Math.PI / 2, Math.PI)
+      .lineStyle(18, this.clr[1])
+      .arc(WIDTH / 2, WIDTH / 2, WIDTH / 2, Math.PI, (Math.PI * 3) / 2)
+      .lineStyle(18, this.clr[0])
+      .arc(WIDTH / 2, WIDTH / 2, WIDTH / 2, (Math.PI * 3) / 2, Math.PI * 2);
+    this.shape2.y = WIDTH + 18;
     this.body = {
       type: "doubleCircle",
-      clr1: 0,
-      clr2: 2,
+      clr1: this.clr[0],
+      clr2: this.clr[2],
     };
     // this.addChild(this.shape1,this.shape2,this.shape3.this.shape4)
     this.addChild(this.shape1, this.shape2);
@@ -262,17 +264,30 @@ export class DoubleCircle extends Container {
     // );
     // Matter.World.add(Manager.physics.world, this.body);
     // this.body.gamePlatform = this; // why am i using this
-    this.shape2.y = WIDTH / 2 + 30;
 
     Math.sin(Math.PI / 3) * WIDTH;
-    this.shape1.pivot.set(WIDTH / 4, WIDTH / 4);
-    this.shape2.pivot.set(WIDTH / 4, WIDTH / 4);
+    this.shape1.pivot.set(WIDTH / 2, WIDTH / 2);
+    this.shape2.pivot.set(WIDTH / 2, WIDTH / 2);
     this.dx = 1;
     this.dy = 10;
   }
   update(deltaTime) {
-    this.shape1.angle += 1;
-    this.shape2.angle -= 1;
+    this.shape1.angle = (this.shape1.angle + 1) % 360;
+    this.shape2.angle = (this.shape2.angle - 1 + 360) % 360;
+
+    if (this.shape1.angle < 90) {
+      this.body.clr1 = this.clr[2];
+      this.body.clr2 = this.clr[0];
+    } else if (this.shape1.angle < 180) {
+      this.body.clr1 = this.clr[1];
+      this.body.clr2 = this.clr[3];
+    } else if (this.shape1.angle < 270) {
+      this.body.clr1 = this.clr[0];
+      this.body.clr2 = this.clr[2];
+    } else {
+      this.body.clr1 = this.clr[3];
+      this.body.clr2 = this.clr[1];
+    }
   }
 }
 

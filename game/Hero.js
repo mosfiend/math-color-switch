@@ -17,7 +17,7 @@ export class Hero extends Container {
       .drawCircle(0, 0, this.diam);
     // this.sprite.x = this.screenWidth / 2 + this.screenWidth / 8 - 5;
     this.sprite.x = this.screenWidth / 2;
-    this.sprite.y = this.screenHeight * 0 - 150;
+    this.sprite.y = this.screenHeight * 1 - 150;
     this.transSprite = new Graphics();
     this.addChild(this.transSprite, this.sprite);
     // physics
@@ -68,17 +68,9 @@ export class Hero extends Container {
       this.body.gameHero = true; // why am i using this
       Matter.World.add(Manager.physics.world, this.body);
     }
-    Matter.Body.setVelocity(this.body, { x: this.dx, y: -8 });
+    Matter.Body.setVelocity(this.body, { x: this.dx, y: -7 });
     const v = Matter.Body.getVelocity(this.body);
     this.dy = v.y;
-  }
-
-  stayOnPlatform(platform) {
-    this.platform = platform;
-    this.jumpIndex = 0;
-    Matter.Body.setVelocity(this.body, { x: 5 });
-    const v = Matter.Body.getVelocity(this.body);
-    this.dx = v.x;
   }
 
   handleEvent(key, released) {

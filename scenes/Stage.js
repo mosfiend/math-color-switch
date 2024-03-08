@@ -18,11 +18,6 @@ export class Stage extends Container {
     this.released = true;
     this.score = 0;
     this.pause = Sprite.from("pause");
-    this.addChild(
-      new Graphics()
-        .beginFill(0xff0000)
-        .drawRect(this.screenWidth / 2, 0, 1, 1000),
-    );
 
     this.pause.eventMode = "static";
     this.pause.cursor = "pointer";
@@ -137,7 +132,46 @@ export class Stage extends Container {
             this.lose();
           }
           break;
+
         case "doubleCircle":
+          const y = this.hero.y + this.hero.sprite.y;
+          const y1 = obstacle.y + obstacle.shape1.y + obstacle.W / 2;
+          const y2 = obstacle.y + obstacle.shape1.y - obstacle.W / 2;
+          if (
+            ((y > y1 && y < y1 + obstacle.diam) ||
+              (y + this.hero.height > y1 &&
+                y + this.hero.height < y1 + obstacle.diam)) &&
+            this.hero.body.clr !== obstacle.body.clr2
+          ) {
+            this.lose();
+          }
+          if (
+            ((y > y2 && y < y2 + obstacle.diam) ||
+              (y + this.hero.height > y2 &&
+                y + this.hero.height < y2 + obstacle.diam)) &&
+            this.hero.body.clr !== obstacle.body.clr1
+          ) {
+            this.lose();
+          }
+          const ye1 = obstacle.y + obstacle.shape2.y + obstacle.W / 2;
+          const ye2 = obstacle.y + obstacle.shape2.y - obstacle.W / 2;
+          if (
+            ((y > ye1 && y < ye1 + obstacle.diam) ||
+              (y + this.hero.height > ye1 &&
+                y + this.hero.height < ye1 + obstacle.diam)) &&
+            this.hero.body.clr !== obstacle.body.clr1
+          ) {
+            this.lose();
+          }
+          if (
+            ((y > ye2 && y < ye2 + obstacle.diam) ||
+              (y + this.hero.height > ye2 &&
+                y + this.hero.height < ye2 + obstacle.diam)) &&
+            this.hero.body.clr !== obstacle.body.clr2
+          ) {
+            this.lose();
+            console.log("BOOM");
+          }
           break;
         case "arithmetic":
           // ICON
