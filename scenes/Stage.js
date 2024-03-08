@@ -1,6 +1,7 @@
 import { Container, Graphics, Sprite, Text } from "pixi.js";
 import Matter from "matter-js";
 import { sound } from "@pixi/sound";
+import { Tween } from "tweedle.js";
 import { Manager } from "../manager.js";
 import { Background } from "../game/Background.js";
 import { Hero } from "../game/Hero.js";
@@ -233,10 +234,21 @@ export class Stage extends Container {
   lose() {
     this.hero.implode();
     this.lost = true;
-    // this.addChild(new GameOver());
-    // Manager.app.stage.pivot.set(0, 0);
-    // Manager.changeScene(new StartMenu());
-    // Manager.clearPhysics();
-    // Manager.createPhysics();
+    const tween1 = new Tween(this).to({ alpha: 0.9 }, 300);
+    const tween2 = new Tween(this).to({ alpha: 0.001 }, 400);
+
+    tween1.start().onComplete(() => {
+      tween2.start().onComplete(() => {
+        const scene = new GameOver(func);
+        scene.alpha = 10000;
+        this.addChild(scene);
+      });
+    });
+    function func() {
+      Manager.app.stage.pivot.set(0, 0);
+      Manager.changeScene(new Stage());
+      Manager.clearPhysics();
+      Manager.createPhysics();
+    }
   }
 }

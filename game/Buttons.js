@@ -26,6 +26,7 @@ export class Icon extends Sprite {
     this.cursor = "pointer";
 
     this.on("pointerdown", () => {
+      console.log("selection");
       this.select();
     });
   }
