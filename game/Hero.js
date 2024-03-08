@@ -9,7 +9,6 @@ export class Hero extends Container {
     this.screenHeight = Manager.height;
     this.started = false;
     this.imploded = false;
-
     this.clr = Manager.colors[Math.trunc(Math.random() * 4)];
     this.diam = 12;
     // graphics
@@ -18,7 +17,7 @@ export class Hero extends Container {
       .drawCircle(0, 0, this.diam);
     // this.sprite.x = this.screenWidth / 2 + this.screenWidth / 8 - 5;
     this.sprite.x = this.screenWidth / 2;
-    this.sprite.y = this.screenHeight * 0.5;
+    this.sprite.y = this.screenHeight * 0 - 150;
     this.transSprite = new Graphics();
     this.addChild(this.transSprite, this.sprite);
     // physics
@@ -44,9 +43,9 @@ export class Hero extends Container {
     this.dy = v.y;
     Matter.Body.setAngle(this.body, 0);
     this.sprite.x = this.body.position.x - this.sprite.width / 2;
-    this.sprite.y = this.body.position.y - this.sprite.height / 2;
+    this.sprite.y = this.body.position.y;
     this.transSprite.x = this.body.position.x - this.sprite.width / 2;
-    this.transSprite.y = this.body.position.y - this.sprite.height / 2;
+    this.transSprite.y = this.body.position.y;
   }
 
   interact(e) {
@@ -58,13 +57,12 @@ export class Hero extends Container {
   startJump() {
     const temp = this.started;
     this.started = true;
-    console.log(temp);
     if (!temp) {
       this.body = Matter.Bodies.circle(
         this.sprite.x + this.sprite.width / 2,
         this.sprite.y - this.sprite.height / 2,
         this.sprite.width / 2,
-        { friction: 0 },
+        { friction: 0, isSensor: true },
       );
       this.body.clr = this.clr;
       this.body.gameHero = true; // why am i using this
@@ -95,13 +93,14 @@ export class Hero extends Container {
       .beginFill(this.body.clr)
       .drawCircle(0, 0, this.diam);
     // this.transSprite.alpha = 1;
-    this.transSprite.x = this.body.position.x;
-    this.transSprite.y = this.body.position.y;
+    this.transSprite.x = this.body.position.x - this.sprite.width / 2;
+    this.transSprite.y = this.body.position.y - this.sprite.height / 2;
     this.body.clr = clr;
     this.sprite.clear().beginFill(clr).drawCircle(0, 0, this.diam);
     this.sprite.alpha = 0;
-    this.sprite.x = this.body.position.x;
+    this.sprite.x = this.body.position.x - this.sprite.width / 2;
     this.sprite.y = this.body.position.y;
+
     const tween = new Tween(this.sprite)
       .to({ alpha: 1 }, 500)
       .onUpdate(() => {})
@@ -112,7 +111,6 @@ export class Hero extends Container {
   }
 
   implode() {
-    console.log("tf nobody called me");
     if (this.imploded) return;
     this.sprite.clear();
     this.transSprite.clear();

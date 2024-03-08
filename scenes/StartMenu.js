@@ -12,7 +12,6 @@ export class StartMenu extends Container {
     this.title.y = 20;
     const SCALE = this.screenWidth / this.title.width;
     const LOGSCALE = this.screenHeight / 3 / this.logo.height;
-    console.log(SCALE);
     // this.title.anchor.set(0.5, 0.5);
     this.title.scale.set(SCALE, SCALE);
     this.logo.scale.set(LOGSCALE, LOGSCALE);

@@ -26,6 +26,9 @@ export class ColorChanger extends Container {
       .arc(0, 0, this.diam, (Math.PI * 3) / 2, Math.PI * 2);
     this.addChild(this.shape);
     this.shape.pivot.set(1, 1);
+    Manager.app.stage.on("pointermove", () => {
+      this.activate();
+    });
   }
 
   update() {
@@ -45,6 +48,11 @@ export class Star extends Container {
     this.sprite.scale.set(SCALE, SCALE);
     this.addChild(this.sprite);
     this.frags = [];
+
+    this.sprite.eventMode = "static";
+    this.sprite.on("pointerdown", () => {
+      this.activate();
+    });
   }
 
   update() {
@@ -62,13 +70,20 @@ export class Star extends Container {
       const frag = this.makeFragment();
       this.frags.push(frag);
       this.addChild(frag);
+
+      new Tween(frag)
+        .to({ alpha: 0 }, 750)
+        .onComplete(() => {
+          Matter.World.remove(Manager.physics.world, frag.body);
+        })
+        .start();
     }
     // this.imploded = true;
   }
   makeFragment() {
     const dim = (1 / Math.sqrt(2)) * this.diam;
     const fragment = Sprite.from("star");
-    fragment.x = this.sprite.x / 2 - 20 + 2 * Math.random() * 20;
+    fragment.x = this.sprite.x / 2 - 30 + 2 * Math.random() * 30;
     fragment.y = this.sprite.y - 25 + 2 * Math.random() * 25;
     const size = 9;
     fragment.width = size;

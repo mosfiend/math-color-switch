@@ -52,7 +52,6 @@ export class Manager {
     Manager.app.ticker.add(Manager.update);
     window.addEventListener("resize", Manager.resize);
     globalThis.__PIXI_APP__ = Manager.app;
-    console.log(Manager.app.view, Manager.app.renderer);
   }
 
   static resize() {

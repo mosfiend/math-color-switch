@@ -1,4 +1,4 @@
-import { Container, Graphics, Text } from "pixi.js";
+import { Container, Graphics, Sprite, Text } from "pixi.js";
 import Matter from "matter-js";
 import { sound } from "@pixi/sound";
 import { Manager } from "../manager.js";
@@ -17,11 +17,16 @@ export class Stage extends Container {
     this.keySet = new Set();
     this.released = true;
     this.score = 0;
+    this.pause = Sprite.from("pause");
     this.addChild(
       new Graphics()
         .beginFill(0xff0000)
         .drawRect(this.screenWidth / 2, 0, 1, 1000),
     );
+
+    this.pause.eventMode = "static";
+    this.pause.cursor = "pointer";
+    this.pause.on("pointerdown", () => {});
     // this.theme = sound._sounds.around;
     // this.theme.volume = 0.05;
     // this.lost = false;
@@ -37,7 +42,7 @@ export class Stage extends Container {
     this.bg = new Background(this.screenHeight);
     this.gameLoop = new GameLoop();
     this.addChild(this.bg, this.gameLoop, this.hero, this.scoreBoard);
-    this.interactive = true;
+    this.eventMode = "static";
     // make entire screen interactive
     this.on("pointerdown", () => {
       this.hero.startJump();
@@ -68,6 +73,7 @@ export class Stage extends Container {
     this.handleEvent();
     this.scoreBoard.text = Math.trunc(this.score);
     this.scoreBoard.y = Manager.app.stage.pivot.y + 15;
+    this.pause.y = Manager.app.stage.pivot.y;
     this.bg.update(deltaTime);
     const world = Manager.app.stage;
     const DIFF = this.hero.sprite.y - (this.screenHeight / 2 + world.pivot.y);
@@ -140,7 +146,6 @@ export class Stage extends Container {
             this.hero.sprite.y < obstacle.sign.y + obstacle.sign.shape.height &&
             !obstacle.touched
           ) {
-            console.log("again");
             obstacle.touched = true;
             this.hero.changeColor(0xcccccc);
           }
@@ -154,12 +159,10 @@ export class Stage extends Container {
                   obstacle.y + obstacle.choiceHeight)) &&
             obstacle.result !== obstacle.current
           ) {
-            console.log(obstacle.result, obstacle.current);
             this.lose();
           }
           break;
         default:
-          console.log("defer and refer", obstacle);
           break;
       }
     });
@@ -186,12 +189,13 @@ export class Stage extends Container {
 
   interact(e) {
     const colliders = [e.pairs[0].bodyA, e.pairs[0].bodyB];
-    if (colliders[0].clr !== colliders[1].clr) {
+    const hero = colliders.find((body) => body.gameHero);
+    const platform = colliders.find((body) => body.platform);
+    if (hero && platform && colliders[0].clr !== colliders[1].clr) {
       this.lose();
     }
-    const hero = colliders.find((body) => body.gameHero);
-    const platform = colliders.find((body) => body.ground);
   }
+
   lose() {
     this.hero.implode();
     this.lost = true;

@@ -1,6 +1,6 @@
 import { Container } from "pixi.js";
 import { Manager } from "../manager";
-import { Circle, DoubleCircle, Square, Triangle } from "./Platforms";
+import { Circle, DoubleCircle, Plus, Square, Triangle } from "./Platforms";
 import { ColorChanger, Star } from "./Items";
 import { Arithmetic } from "./Arithmetic";
 
@@ -16,9 +16,10 @@ export class GameLoop extends Container {
     this.obstacles = [
       // Arithmetic,
       // Triangle,
-      Square,
-      Circle,
+      // Circle,
+      // Square,
       // DoubleCircle,
+      Plus,
     ];
 
     const star = new Star(Manager.app.stage.pivot.y);
