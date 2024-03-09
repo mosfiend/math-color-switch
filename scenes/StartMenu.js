@@ -25,9 +25,7 @@ export class StartMenu extends Container {
       .drawRect(0, 0, this.screenWidth, this.screenHeight);
     // Create a play button
     const playButton = new Graphics()
-      .beginFill(0xff0000, 0.00001)
-      .drawRoundedRect(-150, -35, 300, 60, 15)
-      .lineStyle(10, 0x4eac8e)
+      .beginFill(0x4eac8e)
       .drawRoundedRect(-150, -35, 300, 60, 15);
     playButton.eventMode = "static";
     playButton.buttonMode = true;
@@ -65,7 +63,7 @@ export class StartMenu extends Container {
 
     this.selection = new Selection();
     this.selection.x = this.screenWidth / 2 - this.selection.width / 2;
-    this.selection.y = this.screenHeight * 0.35;
+    this.selection.y = this.screenHeight * 0.37;
     this.addChild(
       this.background,
       this.play,

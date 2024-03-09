@@ -90,7 +90,7 @@ export class Hero extends Container {
       .drawCircle(0, 0, this.diam);
     // this.transSprite.alpha = 1;
     this.transSprite.x = this.body.position.x - this.sprite.width / 2;
-    this.transSprite.y = this.body.position.y - this.sprite.height / 2;
+    this.transSprite.y = this.body.position.y
     this.body.clr = clr;
     this.sprite.clear().beginFill(clr).drawCircle(0, 0, this.diam);
     this.sprite.alpha = 0;

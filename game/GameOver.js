@@ -15,10 +15,10 @@ export class GameOver extends Menu {
     this.y = this.screenHeight / 3;
     this.selection = new Selection();
     this.selection.x = this.screenWidth / 2 - this.selection.width / 2;
-    this.selection.y = 5;
+    this.selection.y = 10;
     this.border = new Graphics()
       .beginFill(0xcee7e1)
-      .drawRect(0, 0, this.screenWidth, 72);
+      .drawRect(0, 0, this.screenWidth, 78);
     this.again = Sprite.from("again");
     this.again.width = 80;
     this.again.height = 80;

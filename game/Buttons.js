@@ -17,7 +17,7 @@ export class Selection extends Container {
   }
 }
 
-class Icon extends Container {
+export class Icon extends Container {
   constructor(texture) {
     super();
     this.operator = texture;
@@ -25,9 +25,7 @@ class Icon extends Container {
     this.icons = { plus: "+", minus: "-", times: "x", by: "÷" };
 
     this.border = new Graphics()
-      .beginFill(0xff0000, 0.00001)
-      .drawRoundedRect(0, 0, 60, 60, 20)
-      .lineStyle(10, 0x4eac8e)
+      .beginFill(0x4eac8e)
       .drawRoundedRect(0, 0, 60, 60, 20);
     this.text = new Text(this.icons[texture], {
       fill: 0xffffff,
@@ -35,8 +33,8 @@ class Icon extends Container {
       fontSize: 32,
       fontWeight: "1000",
     });
-    this.text.x = this.border.width / 2 - this.text.width / 2 - 5;
-    this.text.y = this.border.height / 2 - this.text.height / 2 - 5;
+    this.text.x = this.border.width / 2 - this.text.width / 2;
+    this.text.y = this.border.height / 2 - this.text.height / 2;
     this.border.addChild(this.text);
     this.addChild(this.border);
     this.eventMode = "static";
