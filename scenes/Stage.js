@@ -19,6 +19,9 @@ export class Stage extends Container {
     this.released = true;
     this.score = 0;
     this.pause = Sprite.from("pause");
+    this.pause.x = this.screenWidth - 100;
+    this.pause.width = 100;
+    this.pause.height = 100;
 
     this.pause.eventMode = "static";
     this.pause.cursor = "pointer";
@@ -69,7 +72,7 @@ export class Stage extends Container {
     this.handleEvent();
     this.scoreBoard.text = Math.trunc(this.score);
     this.scoreBoard.y = Manager.app.stage.pivot.y + 15;
-    this.pause.y = Manager.app.stage.pivot.y;
+    this.pause.y = Manager.app.stage.pivot.y + 20;
     this.bg.update(deltaTime);
     const world = Manager.app.stage;
     const DIFF = this.hero.sprite.y - (this.screenHeight / 2 + world.pivot.y);
@@ -234,18 +237,23 @@ export class Stage extends Container {
   lose() {
     this.hero.implode();
     this.lost = true;
-    const tween1 = new Tween(this).to({ alpha: 0.9 }, 300);
-    const tween2 = new Tween(this).to({ alpha: 0.001 }, 400);
+    const temp = new Graphics()
+      .beginFill(0x2e3037)
+      .drawRect(0, 0, this.screenWidth, this.screenHeight);
+    temp.y = Manager.app.stage.pivot.y;
+    temp.alpha = 0;
+    this.addChild(temp);
+    const tween1 = new Tween(temp).to({ alpha: 0.2 }, 300);
+    const tween2 = new Tween(temp).to({ alpha: 1 }, 500);
 
     tween1.start().onComplete(() => {
       tween2.start().onComplete(() => {
         const scene = new GameOver(func);
-        scene.alpha = 10000;
+        Manager.app.stage.pivot.set(0, 0);
         this.addChild(scene);
       });
     });
     function func() {
-      Manager.app.stage.pivot.set(0, 0);
       Manager.changeScene(new Stage());
       Manager.clearPhysics();
       Manager.createPhysics();

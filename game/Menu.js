@@ -16,5 +16,4 @@ export class Menu extends Container {
     this.addChild(this.bg);
   }
   update() {}
-  resize() {}
 }
