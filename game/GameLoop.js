@@ -14,16 +14,16 @@ export class GameLoop extends Container {
     this.stars = [];
     this.changers = [];
     this.obstacles = [
-      Arithmetic,
+      // Arithmetic,
       // Triangle,
-      // Circle,
-      // Square,
-      // DoubleCircle,
-      // Plus,
+      Circle,
+      Square,
+      DoubleCircle,
+      Plus,
     ];
 
     const star = new Star(Manager.app.stage.pivot.y);
-    const block = new Plus(Manager.app.stage.pivot.y);
+    const block = new Circle(Manager.app.stage.pivot.y + 230);
     // this.obstacles[
     // Math.trunc(Math.random() * this.obstacles.length)
     // ](Manager.app.stage.pivot.y);
@@ -59,10 +59,9 @@ export class GameLoop extends Container {
   createBlock() {
     const block = new this.obstacles[
       Math.trunc(Math.random() * this.obstacles.length)
-    ](this.blocks[this.blocks.length - 1].y - this.screenHeight * 0.75);
-    const star = new Star(
-      this.blocks[this.blocks.length - 1].y - this.screenHeight * 0.75,
-    );
+    ](this.blocks[this.blocks.length - 1].y - 200);
+    const star = new Star(block.y);
+
     this.stars.push(star);
     this.blocks.push(block);
     this.step = (this.step + 1) % 5;
@@ -71,16 +70,23 @@ export class GameLoop extends Container {
   }
   createArithmeticBlock() {
     const block = new Arithmetic(
-      this.blocks[this.blocks.length - 1].y - 240 - this.screenHeight * 0.75,
+      this.blocks[this.blocks.length - 1].y - this.screenHeight * 0.75,
     );
+    const star = new Star(
+      this.blocks[this.blocks.length - 1].y - this.screenHeight * 0.82,
+    );
+
+    this.stars.push(star);
     this.step = (this.step + 1) % 5;
     this.blocks.push(block);
     this.addChild(block);
+    this.addChild(star);
   }
+
   changeColor() {
     this.step = (this.step + 1) % 5;
     const ball = new ColorChanger(
-      this.blocks[this.blocks.length - 1].y - this.screenHeight * 0.75,
+      this.blocks[this.blocks.length - 1].y - this.screenHeight * 0.7,
     );
 
     this.changers.push(ball);

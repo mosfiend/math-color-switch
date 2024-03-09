@@ -16,6 +16,8 @@ export class Square extends Container {
     const WIDTH = 150 + HEIGHT;
     this.W = WIDTH;
     this.diam = HEIGHT;
+        this.space = Math.sqrt(2)*(WIDTH +HEIGHT*2)
+    this.y -= this.space;
     this.shape1 = new Graphics()
       .beginFill(this.clr[0])
       .drawRoundedRect(0, 0, WIDTH + HEIGHT, HEIGHT, 15);
@@ -113,6 +115,8 @@ export class Triangle extends Container {
     this.clr.splice(Math.trunc(Math.random() * 4), 1);
     const HEIGHT = 20;
     const WIDTH = 270 + HEIGHT;
+        this.space = WIDTH +HEIGHT*2
+    this.y -= this.space;
     this.shape1 = new Graphics()
       .beginFill(this.clr[0])
       .drawRoundedRect(0, 0, WIDTH, HEIGHT, 20);
@@ -177,6 +181,8 @@ export class Circle extends Container {
     const WIDTH = 190;
     this.W = WIDTH;
     this.diam = 20;
+        this.space = WIDTH +this.diam*2
+    this.y -= this.space;
     this.shape1 = new Graphics()
       .lineStyle(this.diam, this.clr[0])
       .arc(WIDTH / 2, WIDTH / 2, WIDTH / 2, -0.01, Math.PI / 2 + 0.1)
@@ -224,29 +230,31 @@ export class DoubleCircle extends Container {
     this.x = this.screenWidth / 2;
     this.y = y;
     this.clr = Manager.colors;
-    const WIDTH = 150;
+    const WIDTH = 170;
     this.W = WIDTH;
-    this.diam = 18;
+    this.diam = 16;
+        this.space = (WIDTH +this.diam*2)*2
+    this.y -= this.space;
     this.shape1 = new Graphics()
-      .lineStyle(18, this.clr[0])
+      .lineStyle(this.diam, this.clr[0])
       .arc(WIDTH / 2, WIDTH / 2, WIDTH / 2, 0, Math.PI / 2 + 0.1)
-      .lineStyle(18, this.clr[1])
+      .lineStyle(this.diam, this.clr[1])
       .arc(WIDTH / 2, WIDTH / 2, WIDTH / 2, Math.PI / 2, Math.PI + 0.1)
-      .lineStyle(18, this.clr[2])
+      .lineStyle(this.diam, this.clr[2])
       .arc(WIDTH / 2, WIDTH / 2, WIDTH / 2, Math.PI, (Math.PI * 3) / 2 + 0.1)
-      .lineStyle(18, this.clr[3])
+      .lineStyle(this.diam, this.clr[3])
       .arc(WIDTH / 2, WIDTH / 2, WIDTH / 2, (Math.PI * 3) / 2, Math.PI * 2);
     // this.shape1.angle=90
     this.shape2 = new Graphics()
-      .lineStyle(18, this.clr[3])
+      .lineStyle(this.diam, this.clr[3])
       .arc(WIDTH / 2, WIDTH / 2, WIDTH / 2, 0, Math.PI / 2 + 0.1)
-      .lineStyle(18, this.clr[2])
+      .lineStyle(this.diam, this.clr[2])
       .arc(WIDTH / 2, WIDTH / 2, WIDTH / 2, Math.PI / 2, Math.PI + 0.1)
-      .lineStyle(18, this.clr[1])
+      .lineStyle(this.diam, this.clr[1])
       .arc(WIDTH / 2, WIDTH / 2, WIDTH / 2, Math.PI, (Math.PI * 3) / 2 + 0.1)
-      .lineStyle(18, this.clr[0])
+      .lineStyle(this.diam, this.clr[0])
       .arc(WIDTH / 2, WIDTH / 2, WIDTH / 2, (Math.PI * 3) / 2, Math.PI * 2);
-    this.shape2.y = WIDTH + 18;
+    this.shape2.y = WIDTH + this.diam;
     this.body = {
       type: "doubleCircle",
       clr1: this.clr[0],
@@ -305,6 +313,8 @@ export class Plus extends Container {
     const WIDTH = 90;
     this.W = WIDTH;
     this.diam = HEIGHT;
+        this.space = (WIDTH +this.diam)+WIDTH
+    this.y -= this.space;
     this.plus1 = new Container();
     this.plus2 = new Container();
     this.addChild(this.plus1, this.plus2);
@@ -483,11 +493,6 @@ export class Plus extends Container {
     //   x: this.plus1.x,
     //   y: this.y,
     // });
-    console.log(this.plus1.x, this.plus1.y);
-    console.log(this.bod1.position.x, this.bod1.position.y);
-    console.log(this.bod2.position.x, this.bod2.position.y);
-    console.log(this.bod3.position.x, this.bod3.position.y);
-    console.log(this.bod4.position.x, this.bod4.position.y);
   }
 
   update(deltaTime) {
@@ -495,8 +500,6 @@ export class Plus extends Container {
       x: this.x + this.plus1.x + this.diam,
       y: this.y,
     });
-    console.log(this.plus1.y, this.y);
-    console.log((this.bod1.angle / Math.PI) * 180);
     this.plus1.angle = ((this.bod1.angle / Math.PI) * 180) % 360;
     this.plus2.angle = -((this.bod1.angle / Math.PI) * 180) % 360;
   }

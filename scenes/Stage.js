@@ -258,9 +258,9 @@ export class Stage extends Container {
       });
     });
     function func() {
-      Manager.changeScene(new Stage());
       Manager.clearPhysics();
       Manager.createPhysics();
+      Manager.changeScene(new Stage());
     }
   }
 }
