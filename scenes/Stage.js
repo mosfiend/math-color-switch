@@ -36,7 +36,7 @@ export class Stage extends Container {
     this.hero = new Hero(this.screenWidth / 2, 150, this.keySet);
     this.scoreBoard = new Text(this.hero.sprite.y, { fill: 0xffffff });
 
-    this.scoreBoard.x = 15;
+    this.scoreBoard.x = 15 + this.scoreBoard.width;
     this.scoreBoard.y = Manager.app.stage.pivot.y + 15;
     this.bg = new Background(this.screenHeight);
     this.gameLoop = new GameLoop();
@@ -216,15 +216,19 @@ export class Stage extends Container {
       this.handleEvent(e.key);
     });
     el.addEventListener("keyup", (e) => {
-      if (e.key === " ") this.released = true;
-      this.keySet.delete(e.key);
+      console.log("hi" + e.key + "yo");
+      if (e.key === " ") {
+        this.handleRelease(e.key);
+      }
     });
   }
 
   handleEvent(key) {
-    this.hero.handleEvent(key, this.released);
+    this.hero.handleEvent(key);
   }
-
+  handleRelease(key) {
+    this.hero.released = true;
+  }
   interact(e) {
     const colliders = [e.pairs[0].bodyA, e.pairs[0].bodyB];
     const hero = colliders.find((body) => body.gameHero);
@@ -243,7 +247,7 @@ export class Stage extends Container {
     temp.y = Manager.app.stage.pivot.y;
     temp.alpha = 0;
     this.addChild(temp);
-    const tween1 = new Tween(temp).to({ alpha: 0.2 }, 300);
+    const tween1 = new Tween(temp).to({ alpha: 0.5 }, 300);
     const tween2 = new Tween(temp).to({ alpha: 1 }, 500);
 
     tween1.start().onComplete(() => {

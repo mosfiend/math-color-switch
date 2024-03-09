@@ -1,3 +1,4 @@
+import { Tween } from "tweedle.js";
 import { Graphics, Sprite } from "pixi.js";
 import { Menu } from "./Menu";
 import { Selection } from "./Buttons";
@@ -8,9 +9,10 @@ export class GameOver extends Menu {
     super();
     this.screenWidth = Manager.width;
     this.screenHeight = Manager.height;
-    this.bg = new Graphics()
-      .beginFill(0x2e3037)
-      .drawRect(0, 0, this.screenWidth, this.screenHeight);
+    // this.bg = new Graphics()
+    //   .beginFill(0x2e3037)
+    //   .drawRect(0, 0, this.screenWidth, this.screenHeight);
+    this.y = this.screenHeight / 3;
     this.selection = new Selection();
     this.selection.x = this.screenWidth / 2 - this.selection.width / 2;
     this.selection.y = 5;
@@ -21,13 +23,22 @@ export class GameOver extends Menu {
     this.again.width = 80;
     this.again.height = 80;
     this.again.x = this.screenWidth / 2 - this.again.width / 2;
-    this.again.y = 120;
+    this.again.y = 150;
 
     this.again.eventMode = "static";
     this.again.cursor = "pointer";
     this.again.on("pointerdown", () => {
       cb();
     });
-    this.addChild(this.border, this.selection, this.again);
+    this.bg = new Graphics()
+      .beginFill(0x2e3037)
+      .drawRect(0, 0, this.screenWidth, this.screenHeight);
+    this.addChild(this.bg, this.border, this.selection, this.again);
+
+    new Tween(this.again)
+      .to({ width: 90, height: 90 }, 750)
+      .repeat(Infinity)
+      .start()
+      .yoyo(true);
   }
 }

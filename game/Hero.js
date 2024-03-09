@@ -9,6 +9,7 @@ export class Hero extends Container {
     this.screenHeight = Manager.height;
     this.started = false;
     this.imploded = false;
+    this.released = true;
     this.clr = Manager.colors[Math.trunc(Math.random() * 4)];
     this.diam = 12;
     // graphics
@@ -73,8 +74,11 @@ export class Hero extends Container {
     this.dy = v.y;
   }
 
-  handleEvent(key, released) {
-    if (key === " ") this.startJump();
+  handleEvent(key) {
+    if (key === " " && this.released) {
+      this.startJump();
+      this.released = false;
+    }
   }
 
   changeColor(clr) {

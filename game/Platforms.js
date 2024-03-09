@@ -229,21 +229,21 @@ export class DoubleCircle extends Container {
     this.diam = 18;
     this.shape1 = new Graphics()
       .lineStyle(18, this.clr[0])
-      .arc(WIDTH / 2, WIDTH / 2, WIDTH / 2, 0, Math.PI / 2)
+      .arc(WIDTH / 2, WIDTH / 2, WIDTH / 2, 0, Math.PI / 2 + 0.1)
       .lineStyle(18, this.clr[1])
-      .arc(WIDTH / 2, WIDTH / 2, WIDTH / 2, Math.PI / 2, Math.PI)
+      .arc(WIDTH / 2, WIDTH / 2, WIDTH / 2, Math.PI / 2, Math.PI + 0.1)
       .lineStyle(18, this.clr[2])
-      .arc(WIDTH / 2, WIDTH / 2, WIDTH / 2, Math.PI, (Math.PI * 3) / 2)
+      .arc(WIDTH / 2, WIDTH / 2, WIDTH / 2, Math.PI, (Math.PI * 3) / 2 + 0.1)
       .lineStyle(18, this.clr[3])
       .arc(WIDTH / 2, WIDTH / 2, WIDTH / 2, (Math.PI * 3) / 2, Math.PI * 2);
     // this.shape1.angle=90
     this.shape2 = new Graphics()
       .lineStyle(18, this.clr[3])
-      .arc(WIDTH / 2, WIDTH / 2, WIDTH / 2, 0, Math.PI / 2)
+      .arc(WIDTH / 2, WIDTH / 2, WIDTH / 2, 0, Math.PI / 2 + 0.1)
       .lineStyle(18, this.clr[2])
-      .arc(WIDTH / 2, WIDTH / 2, WIDTH / 2, Math.PI / 2, Math.PI)
+      .arc(WIDTH / 2, WIDTH / 2, WIDTH / 2, Math.PI / 2, Math.PI + 0.1)
       .lineStyle(18, this.clr[1])
-      .arc(WIDTH / 2, WIDTH / 2, WIDTH / 2, Math.PI, (Math.PI * 3) / 2)
+      .arc(WIDTH / 2, WIDTH / 2, WIDTH / 2, Math.PI, (Math.PI * 3) / 2 + 0.1)
       .lineStyle(18, this.clr[0])
       .arc(WIDTH / 2, WIDTH / 2, WIDTH / 2, (Math.PI * 3) / 2, Math.PI * 2);
     this.shape2.y = WIDTH + 18;

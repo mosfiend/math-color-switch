@@ -25,6 +25,7 @@ export class Icon extends Sprite {
     this.eventMode = "static";
     this.cursor = "pointer";
 
+    this.alpha = Manager.arithmetic[this.operator] ? 1 : 0.6;
     this.on("pointerdown", () => {
       console.log("selection");
       this.select();
