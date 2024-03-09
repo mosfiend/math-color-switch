@@ -34,7 +34,11 @@ export class Stage extends Container {
     /// ELEMENTS
 
     this.hero = new Hero(this.screenWidth / 2, 150, this.keySet);
-    this.scoreBoard = new Text(this.hero.sprite.y, { fill: 0xffffff });
+    this.scoreBoard = new Text(this.hero.sprite.y, { fill: 0xffffff ,
+      fontWeight: "400",
+      fontFamily: "Madimi One",
+      letterSpacing: 2,
+        });
 
     this.scoreBoard.x = 15 + this.scoreBoard.width;
     this.scoreBoard.y = Manager.app.stage.pivot.y + 15;
@@ -247,7 +251,7 @@ export class Stage extends Container {
     temp.y = Manager.app.stage.pivot.y;
     temp.alpha = 0;
     this.addChild(temp);
-    const tween1 = new Tween(temp).to({ alpha: 0.5 }, 300);
+    const tween1 = new Tween(temp).to({ alpha: 0 }, 400);
     const tween2 = new Tween(temp).to({ alpha: 1 }, 500);
 
     tween1.start().onComplete(() => {

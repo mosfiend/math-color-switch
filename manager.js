@@ -26,10 +26,11 @@ export class Manager {
   }
 
   // Use this function ONCE to start the entire machinery
-  static initialize(width, height, background) {
+  static initialize(width, height, background, lang) {
     // store our width and height
     Manager._width = width;
     Manager._height = height;
+    Manager.lang = lang;
 
     Manager.colors = [0x5f8cff, 0xff675e, 0x9dff5a, 0xffe84f];
     Manager.operators = ["plus", "minus", "times", "by"];

@@ -2,7 +2,7 @@
 * DONE Basic Ball Physics
 * DONE Color Switch
 * TODO Game Logic
-    * [ ] Procedurally generated stages
+    * [x] Procedurally generated stages
 * DONE Arithmetics
     * [x] Addition
     * [x] Subtraction
@@ -16,3 +16,4 @@
 
 
 
+    TODO

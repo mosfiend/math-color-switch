@@ -1,10 +1,10 @@
 import { Tween } from "tweedle.js";
-import { Graphics, Sprite } from "pixi.js";
+import { Container,Graphics, Sprite } from "pixi.js";
 import { Menu } from "./Menu";
 import { Selection } from "./Buttons";
 import { Manager } from "../manager";
 
-export class GameOver extends Menu {
+export class GameOver extends Container {
   constructor(cb) {
     super();
     this.screenWidth = Manager.width;

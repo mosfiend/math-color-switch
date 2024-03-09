@@ -14,9 +14,12 @@ export class Arithmetic extends Container {
     this.text = new Text("", {
       fill: 0xcccccc,
       fontSize: 32,
+      fontWeight: "bolder",
+      fontFamily: "Madimi One",
+      letterSpacing: 2,
     });
     this.values = [];
-    this.icons = { plus: "+", minus: "-", times: "x", by: "÷" };
+    this.icons = { plus: "+", minus: "-", times: "×", by: "÷" };
     this.operands = [];
     const lenChoices = 10;
     this.result = 0;
@@ -139,8 +142,13 @@ class Choice extends Container {
     this.x = x;
     this.y = y;
     this.val = val;
-    this.text = new Text(this.val);
-    this.text.x = width / 2;
+    this.text = new Text(this.val,{
+      fontWeight: "400",
+      fontFamily: "Madimi One",
+      letterSpacing: 2,
+
+        });
+    this.text.x = width / 2-this.text.width/2;
     this.sprite = new Graphics()
       .beginFill(0xcccccc)
       .drawRoundedRect(0, 0, width, height);

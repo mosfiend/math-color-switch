@@ -3,7 +3,7 @@ import { Manager } from "./manager.js";
 import { LoaderScene } from "./scenes/LoaderScene";
 
 const canvas = document.getElementById("pixi-canvas");
-Manager.initialize(400, 640, 0x2e3037);
+Manager.initialize(400, 640, 0x2e3037, "english");
 const loader = new LoaderScene();
 Manager.changeScene(loader);
 // console.log((Manager.app.renderer.screen.width = 400));

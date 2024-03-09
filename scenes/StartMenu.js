@@ -8,25 +8,28 @@ export class StartMenu extends Container {
     this.screenWidth = Manager.width;
     this.screenHeight = Manager.height;
     this.logo = Sprite.from("logo");
-    this.title = Sprite.from("title");
-    this.title.y = 20;
-    const SCALE = this.screenWidth / this.title.width;
+    this.title = Sprite.from(
+      Manager.lang === "english" ? "title" : "title-dutch",
+    );
+    const SCALE = (this.screenWidth * 0.8) / this.title.width;
     const LOGSCALE = this.screenHeight / 3 / this.logo.height;
     // this.title.anchor.set(0.5, 0.5);
     this.title.scale.set(SCALE, SCALE);
     this.logo.scale.set(LOGSCALE, LOGSCALE);
+    this.title.x = this.screenWidth / 2 - this.title.width / 2;
+    this.title.y = 20;
     this.logo.x = this.screenWidth / 2 - this.logo.width / 2;
-    this.logo.y = this.screenHeight - this.logo.height - 40;
+    this.logo.y = 600 - this.logo.height - 20;
     this.play = new Container();
     this.play.x = this.screenWidth / 2;
-    this.play.y = this.screenHeight / 2 + 25;
+    this.play.y = this.logo.y - 60 - 20;
     this.background = new Graphics()
       .beginFill(0xcee7e1)
       .drawRect(0, 0, this.screenWidth, this.screenHeight);
     // Create a play button
     const playButton = new Graphics()
       .beginFill(0x4eac8e)
-      .drawRoundedRect(-150, -35, 300, 60, 15);
+      .drawRoundedRect(-150, 0, 300, 60, 15);
     playButton.eventMode = "static";
     playButton.buttonMode = true;
 
@@ -49,21 +52,21 @@ export class StartMenu extends Container {
       playButton.cursor = "default";
     });
     this.play.addChild(playButton);
+    const text = Manager.lang === "english" ? "PLAY" : "SPELEN";
     // Create a play button text
-    const buttonText = new Text("Play", {
-      fontSize: 32,
+    const buttonText = new Text("PLAY", {
+      fontSize: 34,
       fill: 0xffffff,
       align: "center",
       fontWeight: "bolder",
-      fontFamily: "Helvetica",
+      fontFamily: "Madimi One",
+      letterSpacing: 2,
     });
-    buttonText.anchor.set(0.5, 0.4);
-    buttonText.position.set(0, -10);
+    buttonText.anchor.set(0.5, -0.1);
     this.play.addChild(buttonText);
-
     this.selection = new Selection();
     this.selection.x = this.screenWidth / 2 - this.selection.width / 2;
-    this.selection.y = this.screenHeight * 0.37;
+    this.selection.y = this.play.y - this.selection.HEIGHT - 10;
     this.addChild(
       this.background,
       this.play,

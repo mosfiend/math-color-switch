@@ -8,7 +8,7 @@ export class Selection extends Container {
     this.minus = new Icon("minus");
     this.times = new Icon("times");
     this.by = new Icon("by");
-
+    this.HEIGHT = 60;
     this.minus.x = this.plus.width + 10;
     this.times.x = this.minus.width + this.minus.x + 10;
     this.by.x = this.times.width + this.times.x + 10;
@@ -22,15 +22,15 @@ export class Icon extends Container {
     super();
     this.operator = texture;
     this.selected = Manager.arithmetic[texture];
-    this.icons = { plus: "+", minus: "-", times: "x", by: "÷" };
+    this.icons = { plus: "+", minus: "-", times: "×", by: "÷" };
 
     this.border = new Graphics()
       .beginFill(0x4eac8e)
-      .drawRoundedRect(0, 0, 60, 60, 20);
+      .drawRoundedRect(0, 0, 68, 60, 20);
     this.text = new Text(this.icons[texture], {
       fill: 0xffffff,
-      fontFamily: "Helvetica",
-      fontSize: 32,
+      fontFamily: "Madimi One",
+      fontSize: 36,
       fontWeight: "1000",
     });
     this.text.x = this.border.width / 2 - this.text.width / 2;
