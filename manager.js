@@ -36,10 +36,11 @@ export class Manager {
     Manager.usedOps = new Set();
     Manager.arithmetic = {
       plus: true,
-      minus: true,
-      times: true,
-      by: true,
+      minus: false,
+      times: false,
+      by: false,
     };
+
     // Create our pixi app
     Manager.app = new PIXI.Application({
       view: document.getElementById("pixi-canvas"),

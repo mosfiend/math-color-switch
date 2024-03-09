@@ -14,12 +14,12 @@ export class GameLoop extends Container {
     this.stars = [];
     this.changers = [];
     this.obstacles = [
-      // Arithmetic,
+      Arithmetic,
       // Triangle,
-      Circle,
-      Square,
-      DoubleCircle,
-      Plus,
+      // Circle,
+      // Square,
+      // DoubleCircle,
+      // Plus,
     ];
 
     const star = new Star(Manager.app.stage.pivot.y);

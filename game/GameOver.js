@@ -28,6 +28,14 @@ export class GameOver extends Menu {
     this.again.eventMode = "static";
     this.again.cursor = "pointer";
     this.again.on("pointerdown", () => {
+      const operators = [];
+      for (let operator in Manager.arithmetic) {
+        if (Manager.arithmetic[operator]) {
+          operators.push(operator);
+        } else {
+        }
+      }
+      Manager.operators = operators;
       cb();
     });
     this.bg = new Graphics()
