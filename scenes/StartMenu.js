@@ -1,7 +1,7 @@
 import { Container, Graphics, Sprite, Text, Texture } from "pixi.js";
 import { Manager } from "../manager.js";
 import { Stage } from "./Stage.js";
-import { Icon, Selection } from "../game/Buttons.js";
+import { Selection } from "../game/Buttons.js";
 export class StartMenu extends Container {
   constructor() {
     super();
@@ -25,7 +25,9 @@ export class StartMenu extends Container {
       .drawRect(0, 0, this.screenWidth, this.screenHeight);
     // Create a play button
     const playButton = new Graphics()
-      .beginFill(0x4eac8e)
+      .beginFill(0xff0000, 0.00001)
+      .drawRoundedRect(-150, -35, 300, 60, 15)
+      .lineStyle(10, 0x4eac8e)
       .drawRoundedRect(-150, -35, 300, 60, 15);
     playButton.eventMode = "static";
     playButton.buttonMode = true;
@@ -52,7 +54,7 @@ export class StartMenu extends Container {
     // Create a play button text
     const buttonText = new Text("Play", {
       fontSize: 32,
-      fill: 0xf8c443,
+      fill: 0xffffff,
       align: "center",
       fontWeight: "bolder",
       fontFamily: "Helvetica",
@@ -84,7 +86,6 @@ export class StartMenu extends Container {
   resize(newWidth, newHeight) {
     this.screenWidth = newWidth;
     this.screenHeight = newHeight;
-    this.menuBox.position.set(this.screenWidth / 2, this.screenHeight / 2);
   }
 
   update(deltaTime) {
