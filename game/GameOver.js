@@ -18,7 +18,7 @@ export class GameOver extends Menu {
     this.selection.y = 5;
     this.border = new Graphics()
       .beginFill(0xcee7e1)
-      .drawRect(0, 0, this.screenWidth, 92);
+      .drawRect(0, 0, this.screenWidth, 72);
     this.again = Sprite.from("again");
     this.again.width = 80;
     this.again.height = 80;

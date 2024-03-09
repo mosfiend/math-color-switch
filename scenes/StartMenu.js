@@ -25,7 +25,7 @@ export class StartMenu extends Container {
       .drawRect(0, 0, this.screenWidth, this.screenHeight);
     // Create a play button
     const playButton = new Graphics()
-      .beginFill(0x231f20)
+      .beginFill(0x4eac8e)
       .drawRoundedRect(-150, -35, 300, 60, 15);
     playButton.eventMode = "static";
     playButton.buttonMode = true;
@@ -52,10 +52,12 @@ export class StartMenu extends Container {
     // Create a play button text
     const buttonText = new Text("Play", {
       fontSize: 32,
-      fill: 0xffffff,
+      fill: 0xf8c443,
       align: "center",
+      fontWeight: "bolder",
+      fontFamily: "Helvetica",
     });
-    buttonText.anchor.set(0.5, 0.5);
+    buttonText.anchor.set(0.5, 0.4);
     buttonText.position.set(0, -10);
     this.play.addChild(buttonText);
 

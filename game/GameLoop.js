@@ -23,7 +23,7 @@ export class GameLoop extends Container {
     ];
 
     const star = new Star(Manager.app.stage.pivot.y);
-    const block = new Circle(Manager.app.stage.pivot.y);
+    const block = new Plus(Manager.app.stage.pivot.y);
     // this.obstacles[
     // Math.trunc(Math.random() * this.obstacles.length)
     // ](Manager.app.stage.pivot.y);
