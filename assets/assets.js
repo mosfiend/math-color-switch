@@ -20,7 +20,7 @@ export const manifest = {
     {
       name: "sounds",
       assets: {
-        again: "/images/again.png",
+        sounds: "/sounds/sounds.mp3",
       },
     },
   ],

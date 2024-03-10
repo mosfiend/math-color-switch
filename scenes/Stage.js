@@ -1,6 +1,6 @@
 import { Container, Graphics, Sprite, Text } from "pixi.js";
 import Matter from "matter-js";
-import { sound } from "@pixi/sound";
+import { sound, Sound } from "@pixi/sound";
 import { Tween } from "tweedle.js";
 import { Manager } from "../manager.js";
 import { Background } from "../game/Background.js";
@@ -26,19 +26,28 @@ export class Stage extends Container {
     this.pause.eventMode = "static";
     this.pause.cursor = "pointer";
     this.pause.on("pointerdown", () => {});
-    // this.theme = sound._sounds.around;
-    // this.theme.volume = 0.05;
+    const sprites = {
+      jump: { start: 1.2, end: 2 },
+      collect: { start: 2.2, end: 3.5 },
+      change: { start: 3.7, end: 4 },
+      death: { start: 12, end: 13 },
+    };
+    this.theme = Sound.from({ url: "sounds/sounds.mp3", sprites: sprites });
+    this.theme.volume = 0.05;
+    // this.theme.sprites = sprites;
     // this.lost = false;
     // this.theme.play();
     // this.song = sound.add("spice", "/assets/images/ITS.mp3")
     /// ELEMENTS
+    //
 
-    this.hero = new Hero(this.screenWidth / 2, 150, this.keySet);
-    this.scoreBoard = new Text(this.hero.sprite.y, { fill: 0xffffff ,
+    this.hero = new Hero(this.theme);
+    this.scoreBoard = new Text(this.hero.sprite.y, {
+      fill: 0xffffff,
       fontWeight: "400",
       fontFamily: "Madimi One",
       letterSpacing: 2,
-        });
+    });
 
     this.scoreBoard.x = 15 + this.scoreBoard.width;
     this.scoreBoard.y = Manager.app.stage.pivot.y + 15;
@@ -94,7 +103,11 @@ export class Stage extends Container {
         this.hero.sprite.y > star.y &&
         this.hero.sprite.y < star.y + star.height
       ) {
-        if (!star.imploded) this.score++;
+        if (!star.imploded) {
+          this.score++;
+          this.theme.play("collect");
+        }
+
         star.activate();
       }
       star.update();
@@ -103,9 +116,11 @@ export class Stage extends Container {
     this.gameLoop.changers.forEach((changer) => {
       if (
         this.hero.sprite.y > changer.y &&
-        this.hero.sprite.y < changer.y + changer.diam
+        this.hero.sprite.y < changer.y + changer.diam &&
+        !changer.collected
       ) {
         this.hero.changeColor(changer.mainClr);
+        changer.collected = true;
       }
     });
 

@@ -3,7 +3,7 @@ import Matter from "matter-js";
 import { Manager } from "../manager";
 import { Tween } from "tweedle.js";
 export class Hero extends Container {
-  constructor(x, y) {
+  constructor(sound) {
     super();
     this.screenWidth = Manager.width;
     this.screenHeight = Manager.height;
@@ -12,6 +12,7 @@ export class Hero extends Container {
     this.released = true;
     this.clr = Manager.colors[Math.trunc(Math.random() * 4)];
     this.diam = 12;
+    this.sound = sound;
     // graphics
     this.sprite = new Graphics()
       .beginFill(this.clr)
@@ -69,6 +70,7 @@ export class Hero extends Container {
       this.body.gameHero = true; // why am i using this
       Matter.World.add(Manager.physics.world, this.body);
     }
+    if (!this.imploded) this.sound.play("jump");
     Matter.Body.setVelocity(this.body, { x: this.dx, y: -7 });
     const v = Matter.Body.getVelocity(this.body);
     this.dy = v.y;
@@ -104,6 +106,7 @@ export class Hero extends Container {
         // this.transSprite.alpha = 0;
       })
       .start();
+    this.sound.play("change");
   }
 
   implode() {
@@ -115,6 +118,7 @@ export class Hero extends Container {
       const frag = this.makeFragment();
       this.fragments.push(frag);
       this.addChild(frag);
+      this.sound.play("death");
 
       Matter.Body.setVelocity(frag.body, {
         x: 5 - Math.random() * 10,

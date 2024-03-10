@@ -142,13 +142,13 @@ class Choice extends Container {
     this.x = x;
     this.y = y;
     this.val = val;
-    this.text = new Text(this.val,{
+    this.text = new Text(this.val, {
       fontWeight: "400",
       fontFamily: "Madimi One",
       letterSpacing: 2,
-
-        });
-    this.text.x = width / 2-this.text.width/2;
+    });
+    this.text.x = width / 2 - this.text.width / 2;
+    this.text.y = height / 2 - this.text.height / 2;
     this.sprite = new Graphics()
       .beginFill(0xcccccc)
       .drawRoundedRect(0, 0, width, height);
