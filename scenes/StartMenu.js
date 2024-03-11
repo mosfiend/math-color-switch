@@ -54,7 +54,7 @@ export class StartMenu extends Container {
     this.play.addChild(playButton);
     const text = Manager.lang === "english" ? "PLAY" : "SPELEN";
     // Create a play button text
-    const buttonText = new Text("PLAY", {
+    const buttonText = new Text(text, {
       fontSize: 34,
       fill: 0xffffff,
       align: "center",
