@@ -1,3 +1,4 @@
+import { World } from "matter-js";
 import { Container } from "pixi.js";
 import { Manager } from "../manager";
 import { Circle, DoubleCircle, Plus, Square, Triangle } from "./Platforms";
@@ -47,12 +48,17 @@ export class GameLoop extends Container {
         this.createBlock();
       }
     }
-    if (
-      curBlock.y >
-      Math.abs(Manager.app.stage.pivot.y) + this.screenHeight * 1.5
-    ) {
+    if (curBlock.y - Manager.app.stage.pivot.y > this.screenHeight * 1.5) {
+      //1.5 marge de securite
       this.removeChild(this.blocks[0]);
       this.blocks[0].destroy();
+      if (curBlock.isColorChanger) {
+        this.changers.shift();
+      } else {
+        if (curBlock.body.type === "composite") {
+          World.remove(Manager.physics.world, curBlock.body);
+        }
+      }
       this.blocks.shift();
     }
   }

@@ -8,6 +8,7 @@ export class ColorChanger extends Container {
     this.x = Manager.width / 2;
     this.y = y;
     this.collected = false;
+    this.isColorChanger = true;
     this.clr = Manager.colors;
     this.diam = 27;
     this.mainClr = Manager.colors[Math.trunc(Math.random() * 4)];

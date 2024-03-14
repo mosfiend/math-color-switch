@@ -401,13 +401,6 @@ export class Plus extends Container {
     );
     // this.pivot.set(HEIGHT / 2, HEIGHT / 2);
 
-    console.log(
-      this.shape1.x +
-        this.x -
-        this.pivot.x +
-        this.plus1.x +
-        this.shape1.width / 2,
-    );
     // this.shape1.width+this.shape1.height
     this.body = Matter.Composite.create();
     this.bod1 = Matter.Bodies.rectangle(
