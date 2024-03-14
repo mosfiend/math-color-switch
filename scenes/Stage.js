@@ -193,7 +193,6 @@ export class Stage extends Container {
             this.hero.body.clr !== obstacle.body.clr2
           ) {
             this.lose();
-            console.log("BOOM");
           }
           break;
         case "arithmetic":
@@ -235,7 +234,6 @@ export class Stage extends Container {
       this.handleEvent(e.key);
     });
     el.addEventListener("keyup", (e) => {
-      console.log("hi" + e.key + "yo");
       if (e.key === " ") {
         this.handleRelease(e.key);
       }
@@ -280,6 +278,7 @@ export class Stage extends Container {
       Manager.clearPhysics();
       Manager.createPhysics();
       Manager.changeScene(new Stage());
+      // Manager.usedOps = new Set()
     }
   }
 }

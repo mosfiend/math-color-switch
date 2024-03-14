@@ -69,26 +69,12 @@ export class Arithmetic extends Container {
   makeOp() {
     this.operator =
       this.operators[Math.trunc(Math.random() * this.operators.length)];
-    const ceil1 =
-      this.operator === "minus" || this.operator === "plus" ? 20 : 10;
-    this.operands[0] = Math.trunc(Math.random() * ceil1) + 1;
-    const ceil2 =
-      this.operator === "minus"
-        ? this.operands[0]
-        : this.operator === "plus"
-        ? 20
-        : 10;
-    this.operands[1] = Math.trunc(Math.random() * ceil2) + 1;
-    if (this.operator === "by") {
-      this.operands[0] = this.operands[0] * this.operands[1];
-    }
-    while (Manager.usedOps.has(this.operands[0] + "+" + this.operands[1])) {
-      this.operator =
-        this.operators[Math.trunc(Math.random() * this.operators.length)];
-      this.operands[0] = Math.trunc(Math.random() * ceil1) + 1;
-      this.operands[1] = Math.trunc(Math.random() * ceil2) + 1;
-      if (this.operator === "by")
-        this.operands[0] = this.operands[0] * this.operands21;
+
+    this.createOperands();
+    while (
+      Manager.usedOps.has(this.operands[0] + this.operator + this.operands[1])
+    ) {
+      this.createOperands();
     }
     this.text.text =
       this.operands[0] +
@@ -133,6 +119,29 @@ export class Arithmetic extends Container {
       this.values.push(this.values[i]);
     }
     Manager.usedOps.add(this.operands[0] + "+" + this.operands[1]);
+  }
+
+  createOperands() {
+    switch (this.operator) {
+      case "plus":
+        this.operands[0] = Math.trunc(Math.random() * 20) + 1;
+        this.operands[1] = Math.trunc(Math.random() * 20) + 1;
+        break;
+      case "minus":
+        this.operands[0] = Math.trunc(Math.random() * 20) + 1;
+        this.operands[1] =
+          this.operands[0] - Math.trunc(Math.random() * this.operands[0]);
+        break;
+      case "times":
+        this.operands[0] = Math.trunc(Math.random() * 10) + 1;
+        this.operands[1] = Math.trunc(Math.random() * 10) + 1;
+        break;
+      case "by":
+        this.operands[1] = Math.trunc(Math.random() * 10) + 1;
+        this.operands[0] =
+          this.operands[1] * (Math.trunc(Math.random() * 10) + 1);
+        break;
+    }
   }
 }
 

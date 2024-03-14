@@ -15,12 +15,12 @@ export class GameLoop extends Container {
     this.stars = [];
     this.changers = [];
     this.obstacles = [
-      // Arithmetic,
+      Arithmetic,
       // Triangle,
-      Circle,
-      Square,
-      DoubleCircle,
-      Plus,
+      // Circle,
+      // Square,
+      // DoubleCircle,
+      // Plus,
     ];
 
     const star = new Star(Manager.app.stage.pivot.y);
@@ -65,7 +65,7 @@ export class GameLoop extends Container {
   createBlock() {
     const block = new this.obstacles[
       Math.trunc(Math.random() * this.obstacles.length)
-    ](this.blocks[this.blocks.length - 1].y - 200);
+    ](this.blocks[this.blocks.length - 1].y - 500);
     const star = new Star(block.y);
 
     this.stars.push(star);
