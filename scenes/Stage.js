@@ -259,18 +259,18 @@ export class Stage extends Container {
     this.hero.implode();
     this.lost = true;
     const temp = new Graphics()
-      .beginFill(0x2e3037)
+      .beginFill(0xcee7e1)
       .drawRect(0, 0, this.screenWidth, this.screenHeight);
     temp.y = Manager.app.stage.pivot.y;
     temp.alpha = 0;
     this.addChild(temp);
-    const tween1 = new Tween(temp).to({ alpha: 0 }, 400);
+    const tween1 = new Tween(temp).to({ alpha: 0 }, 300);
     const tween2 = new Tween(temp).to({ alpha: 1 }, 500);
 
     tween1.start().onComplete(() => {
       tween2.start().onComplete(() => {
-        const scene = new GameOver(func);
         Manager.app.stage.pivot.set(0, 0);
+        const scene = new GameOver(func, this.score);
         this.addChild(scene);
       });
     });

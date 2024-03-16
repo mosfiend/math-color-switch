@@ -107,9 +107,7 @@ export class Sign extends Container {
     this.x = Manager.width / 2;
     this.y = y;
     this.clr = Manager.colors;
-    this.shape = Sprite.from(sign);
-    const SCALE = 54 / this.shape.width;
-    this.shape.scale.set(SCALE, SCALE);
+    this.shape = new Graphics().beginFill().drawRect(0, 0, 54, 54);
     this.addChild(this.shape);
   }
 

@@ -4,10 +4,7 @@ export const manifest = {
       name: "misc",
       assets: {
         star: "/images/star.png",
-        plus: "/images/plus.png",
-        minus: "/images/minus.png",
-        times: "/images/times.png",
-        by: "/images/by.png",
+        "star-icon": "/images/star-icon.png",
         title: "/images/title.png",
         "title-dutch": "/images/logo-dutch.png",
         logo: "/images/logo.png",
