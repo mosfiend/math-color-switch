@@ -128,7 +128,7 @@ export class GameOver extends Container {
     this.allScores = new Container();
     this.addChild(this.allScores);
 
-    console.log(localStorage["highScores"]);
+    if (!localStorage["highScores"]) return;
     const scores = localStorage.highScores
       .split("||")
       .map((a, i) => {
