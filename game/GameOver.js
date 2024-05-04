@@ -1,3 +1,5 @@
+import axios from "axios";
+import { Axios } from "axios";
 import { Tween } from "tweedle.js";
 import { Container, Graphics, Sprite, Text } from "pixi.js";
 import { Menu } from "./Menu";
@@ -7,6 +9,7 @@ import { Input } from "@pixi/ui";
 export class GameOver extends Container {
   constructor(cb, score) {
     super();
+
     this.score = score;
     this.screenWidth = Manager.width;
     this.screenHeight = Manager.height;
@@ -123,23 +126,27 @@ export class GameOver extends Container {
       .yoyo(true);
   }
 
-  organize() {
+  async organize() {
+    const data = await this.getGoals();
+    console.log(data);
+    console.log(typeof data);
     if (this.allScores) this.removeChild(this.allScores);
     this.allScores = new Container();
     this.addChild(this.allScores);
+    if (!data) return;
+    // if (!localStorage["highScores"]) return;
+    // const scores = localStorage.highScores
+    //   .split("||")
 
-    if (!localStorage["highScores"]) return;
-    const scores = localStorage.highScores
-      .split("||")
-      .map((a, i) => {
-        let output;
-        if (a) output = JSON.parse(a);
-        return output;
-      })
+    const scores = data
+      // .map((a, i) => {
+      //   let output;
+      //   if (a) output = JSON.parse(a);
+      //   return output;
+      // })
       .sort((a, b) => {
         return Number(b.score) - Number(a.score);
       });
-    console.log(scores);
 
     for (let i = 0; i < 5; i++) {
       if (scores[i] === undefined) break;
@@ -155,12 +162,17 @@ export class GameOver extends Container {
   // Writing :
   //
   // localStorage['myKey'] = JSON.stringify(myVar);
+  //
+  async getGoals() {
+    const API_URL = "https://math-world-highscores.onrender.com/api/scores";
+    const response = await axios.get(API_URL, {});
+    return response.data;
+  }
 }
 
 class Score extends Container {
   constructor(y, name, score) {
     super();
-    console.log(y, name, score);
     this.y = y;
     this.star = Sprite.from("star-icon");
     this.name = new Text(name, {
@@ -235,20 +247,33 @@ class Submit extends Container {
     });
   }
 
-  submit() {
+  async submit() {
     if (this.submitted) return;
+
+    await this.createGoal(this.name.value, this.score);
     this.submitted = true;
-    if (localStorage["highScores"]) {
-      localStorage["highScores"] =
-        localStorage["highScores"] +
-        "||" +
-        JSON.stringify({ name: this.name.value, score: this.score });
-    } else {
-      localStorage["highScores"] = JSON.stringify({
-        name: this.name.value,
-        score: this.score,
-      });
-    }
+    // if (localStorage["highScores"]) {
+    // localStorage["highScores"] =
+    //   localStorage["highScores"] +
+    //   "||" +
+    //   JSON.stringify({ name: this.name.value, score: this.score });
+    // } else {
+    //   localStorage["highScores"] = JSON.stringify({
+    //     name: this.name.value,
+    //     score: this.score,
+    //   });
+    // }
     this.cb();
+  }
+
+  async createGoal(namae, score) {
+    const API_URL = "https://math-world-highscores.onrender.com/api/scores";
+    console.log(score, "mostafa");
+    const response = await axios.post(API_URL, {
+      name: namae,
+      score: score,
+    });
+    console.log("the data", response);
+    return response.data;
   }
 }
