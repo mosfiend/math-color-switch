@@ -1,4 +1,4 @@
-import * as axios from "axios";
+import axios from "axios";
 import { Tween } from "tweedle.js";
 import { Container, Graphics, Sprite, Text } from "pixi.js";
 import { Menu } from "./Menu";
