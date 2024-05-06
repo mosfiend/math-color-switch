@@ -1,10 +1,11 @@
-import axios from "axios";
+// import axios from "axios";
 import { Tween } from "tweedle.js";
 import { Container, Graphics, Sprite, Text } from "pixi.js";
 import { Menu } from "./Menu";
 import { Selection } from "./Buttons";
 import { Manager } from "../manager";
 import { Input } from "@pixi/ui";
+
 export class GameOver extends Container {
   constructor(cb, score) {
     super();
