@@ -2,6 +2,7 @@ import { World } from "matter-js";
 import { Container } from "pixi.js";
 import { Manager } from "../manager";
 import { Circle, DoubleCircle, Plus, Square, Triangle } from "./Platforms";
+import { SmallCircles } from "./Platforms2";
 import { ColorChanger, Star } from "./Items";
 import { Arithmetic } from "./Arithmetic";
 
@@ -21,6 +22,7 @@ export class GameLoop extends Container {
       Square,
       DoubleCircle,
       Plus,
+      SmallCircles,
     ];
 
     const star = new Star(Manager.app.stage.pivot.y);
@@ -63,9 +65,11 @@ export class GameLoop extends Container {
     }
   }
   createBlock() {
+    const lastBlock = this.blocks[this.blocks.length - 1];
+    console.log(lastBlock.y, lastBlock.isArithmetic);
     const block = new this.obstacles[
       Math.trunc(Math.random() * this.obstacles.length)
-    ](this.blocks[this.blocks.length - 1].y - 200);
+    ](lastBlock.y - (lastBlock.isArithmetic ? 450 : 200));
     const star = new Star(block.y);
 
     this.stars.push(star);
@@ -78,15 +82,24 @@ export class GameLoop extends Container {
     const block = new Arithmetic(
       this.blocks[this.blocks.length - 1].y - this.screenHeight * 0.75,
     );
-    const star = new Star(
-      this.blocks[this.blocks.length - 1].y - this.screenHeight * 0.82,
-    );
+    const stars = [
+      new Star(
+        this.blocks[this.blocks.length - 1].y - this.screenHeight * 0.82,
+      ),
 
-    this.stars.push(star);
+      new Star(
+        this.blocks[this.blocks.length - 1].y - this.screenHeight * 0.97,
+      ),
+      new Star(
+        this.blocks[this.blocks.length - 1].y - this.screenHeight * 1.12,
+      ),
+    ];
+
+    this.stars.push(...stars);
     this.step = (this.step + 1) % 5;
     this.blocks.push(block);
     this.addChild(block);
-    this.addChild(star);
+    this.addChild(...stars);
   }
 
   changeColor() {

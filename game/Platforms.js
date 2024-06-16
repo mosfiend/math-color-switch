@@ -16,7 +16,7 @@ export class Square extends Container {
     const WIDTH = 150 + HEIGHT;
     this.W = WIDTH;
     this.diam = HEIGHT;
-        this.space = Math.sqrt(2)*(WIDTH +HEIGHT*2)
+    this.space = Math.sqrt(2) * (WIDTH + HEIGHT * 2);
     this.y -= this.space;
     this.shape1 = new Graphics()
       .beginFill(this.clr[0])
@@ -115,7 +115,7 @@ export class Triangle extends Container {
     this.clr.splice(Math.trunc(Math.random() * 4), 1);
     const HEIGHT = 20;
     const WIDTH = 270 + HEIGHT;
-        this.space = WIDTH +HEIGHT*2
+    this.space = WIDTH + HEIGHT * 2;
     this.y -= this.space;
     this.shape1 = new Graphics()
       .beginFill(this.clr[0])
@@ -181,7 +181,7 @@ export class Circle extends Container {
     const WIDTH = 190;
     this.W = WIDTH;
     this.diam = 20;
-        this.space = WIDTH +this.diam*2
+    this.space = WIDTH + this.diam * 2;
     this.y -= this.space;
     this.shape1 = new Graphics()
       .lineStyle(this.diam, this.clr[0])
@@ -233,7 +233,7 @@ export class DoubleCircle extends Container {
     const WIDTH = 170;
     this.W = WIDTH;
     this.diam = 16;
-        this.space = (WIDTH +this.diam*2)*2
+    this.space = (WIDTH + this.diam * 2) * 2;
     this.y -= this.space;
     this.shape1 = new Graphics()
       .lineStyle(this.diam, this.clr[0])
@@ -313,7 +313,7 @@ export class Plus extends Container {
     const WIDTH = 90;
     this.W = WIDTH;
     this.diam = HEIGHT;
-        this.space = (WIDTH +this.diam)+WIDTH
+    this.space = WIDTH + this.diam + WIDTH;
     this.y -= this.space;
     this.plus1 = new Container();
     this.plus2 = new Container();

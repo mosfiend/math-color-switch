@@ -35,6 +35,7 @@ export class Manager {
     Manager.colors = [0x5f8cff, 0xff675e, 0x9dff5a, 0xffe84f];
     Manager.operators = ["plus", "minus", "times", "by"];
     Manager.usedOps = new Set();
+    Manager.scores;
     Manager.arithmetic = {
       plus: true,
       minus: false,
@@ -93,5 +94,22 @@ export class Manager {
     if (Manager.currentScene != undefined) Manager.currentScene.transitionOut();
     Manager.currentScene = new Stage();
     Manager.currentScene.transitionIn();
+  }
+
+  static async getScores() {
+    const API_URL = "https://math-world-highscores.onrender.com/api/scores";
+    const response = await axios.get(API_URL, {});
+    return response.data;
+  }
+
+  async createScore(namae, score) {
+    const API_URL = "https://math-world-highscores.onrender.com/api/scores";
+    console.log(score, "mostafa");
+    const response = await axios.post(API_URL, {
+      name: namae,
+      score: score,
+    });
+    console.log("the data", response);
+    return response.data;
   }
 }

@@ -127,7 +127,7 @@ export class GameOver extends Container {
   }
 
   async organize() {
-    const data = await this.getGoals();
+    const data = await this.getScores();
     console.log(data);
     console.log(typeof data);
     if (this.allScores) this.removeChild(this.allScores);
@@ -163,7 +163,7 @@ export class GameOver extends Container {
   //
   // localStorage['myKey'] = JSON.stringify(myVar);
   //
-  async getGoals() {
+  async getScores() {
     const API_URL = "https://math-world-highscores.onrender.com/api/scores";
     const response = await axios.get(API_URL, {});
     return response.data;
@@ -250,7 +250,7 @@ class Submit extends Container {
   async submit() {
     if (this.submitted) return;
 
-    await this.createGoal(this.name.value, this.score);
+    await this.createScore(this.name.value, this.score);
     this.submitted = true;
     // if (localStorage["highScores"]) {
     // localStorage["highScores"] =
@@ -266,7 +266,7 @@ class Submit extends Container {
     this.cb();
   }
 
-  async createGoal(namae, score) {
+  async createScore(namae, score) {
     const API_URL = "https://math-world-highscores.onrender.com/api/scores";
     console.log(score, "mostafa");
     const response = await axios.post(API_URL, {

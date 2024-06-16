@@ -10,7 +10,7 @@ export class Arithmetic extends Container {
     this.y = y;
     this.body = { type: "arithmetic" };
     this.operators = [...Manager.operators];
-
+    this.isArithmetic = true;
     this.text = new Text("", {
       fill: 0xcccccc,
       fontSize: 32,
