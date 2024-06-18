@@ -2,7 +2,11 @@ import { World } from "matter-js";
 import { Container } from "pixi.js";
 import { Manager } from "../manager";
 import { Circle, DoubleCircle, Plus, Square, Triangle } from "./Platforms";
-import { SmallCircles } from "./Platforms2";
+import {
+  SmallCircles,
+  DoubleSmallCircles,
+  ContainedCircles,
+} from "./Platforms2";
 import { ColorChanger, Star } from "./Items";
 import { Arithmetic } from "./Arithmetic";
 
@@ -15,6 +19,7 @@ export class GameLoop extends Container {
     this.blocks = [];
     this.stars = [];
     this.changers = [];
+    this.shapeQueue = [];
     this.obstacles = [
       // Arithmetic,
       // Triangle,
@@ -22,8 +27,8 @@ export class GameLoop extends Container {
       Square,
       DoubleCircle,
       Plus,
-      SmallCircles,
     ];
+    this.newObstacles = [SmallCircles, ContainedCircles, DoubleSmallCircles];
 
     const star = new Star(Manager.app.stage.pivot.y);
     const block = new Circle(Manager.app.stage.pivot.y + 230);
@@ -66,10 +71,13 @@ export class GameLoop extends Container {
   }
   createBlock() {
     const lastBlock = this.blocks[this.blocks.length - 1];
-    console.log(lastBlock.y, lastBlock.isArithmetic);
-    const block = new this.obstacles[
-      Math.trunc(Math.random() * this.obstacles.length)
-    ](lastBlock.y - (lastBlock.isArithmetic ? 450 : 200));
+    this.shapeQueue.push(
+      this.obstacles[Math.trunc(Math.random() * this.obstacles.length)],
+    );
+    const block = new this.shapeQueue[0](
+      lastBlock.y - (lastBlock.isArithmetic ? 450 : 200),
+    );
+    this.shapeQueue.shift();
     const star = new Star(block.y);
 
     this.stars.push(star);
@@ -100,6 +108,11 @@ export class GameLoop extends Container {
     this.blocks.push(block);
     this.addChild(block);
     this.addChild(...stars);
+    if (this.newObstacles.length) {
+      const newObst = this.newObstacles.shift();
+      this.shapeQueue.unshift(newObst);
+      this.obstacles.push(newObst);
+    }
   }
 
   changeColor() {

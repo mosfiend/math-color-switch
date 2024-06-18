@@ -231,7 +231,8 @@ export class DoubleCircle extends Container {
     this.y = y;
     this.clr = Manager.colors;
     const WIDTH = 170;
-    this.W = WIDTH;
+    this.W = WIDTH / 2;
+    this.W2 = WIDTH / 2;
     this.diam = 16;
     this.space = (WIDTH + this.diam * 2) * 2;
     this.y -= this.space;
@@ -295,6 +296,42 @@ export class DoubleCircle extends Container {
     } else {
       this.body.clr1 = this.clr[3];
       this.body.clr2 = this.clr[1];
+    }
+  }
+
+  detectCollision(hero, lose) {
+    const y = hero.y + hero.sprite.y;
+    const y1 = this.y + this.shape1.y + this.W;
+    const y2 = this.y + this.shape1.y - this.W;
+    if (
+      ((y > y1 && y < y1 + this.diam) ||
+        (y + hero.height > y1 && y + hero.height < y1 + this.diam)) &&
+      hero.body.clr !== this.body.clr2
+    ) {
+      lose();
+    }
+    if (
+      ((y > y2 && y < y2 + this.diam) ||
+        (y + hero.height > y2 && y + hero.height < y2 + this.diam)) &&
+      hero.body.clr !== this.body.clr1
+    ) {
+      lose();
+    }
+    const ye1 = this.y + this.shape2.y + this.W2;
+    const ye2 = this.y + this.shape2.y - this.W2;
+    if (
+      ((y > ye1 && y < ye1 + this.diam) ||
+        (y + hero.height > ye1 && y + hero.height < ye1 + this.diam)) &&
+      hero.body.clr !== this.body.clr1
+    ) {
+      lose();
+    }
+    if (
+      ((y > ye2 && y < ye2 + this.diam) ||
+        (y + hero.height > ye2 && y + hero.height < ye2 + this.diam)) &&
+      hero.body.clr !== this.body.clr2
+    ) {
+      lose();
     }
   }
 }

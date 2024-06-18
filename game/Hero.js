@@ -11,6 +11,7 @@ export class Hero extends Container {
     this.imploded = false;
     this.released = true;
     this.clr = Manager.colors[Math.trunc(Math.random() * 4)];
+    Manager.clr = this.clr;
     this.diam = 12;
     this.sound = sound;
     // graphics
@@ -94,6 +95,7 @@ export class Hero extends Container {
     this.transSprite.x = this.body.position.x - this.sprite.width / 2;
     this.transSprite.y = this.body.position.y;
     this.body.clr = clr;
+    Manager.clr = clr;
     this.sprite.clear().beginFill(clr).drawCircle(0, 0, this.diam);
     this.sprite.alpha = 0;
     this.sprite.x = this.body.position.x - this.sprite.width / 2;
