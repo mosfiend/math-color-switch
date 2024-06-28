@@ -1,6 +1,7 @@
 import { Graphics, Container, RoundedRectangle } from "pixi.js";
 import Matter from "matter-js";
 import { Manager } from "../manager";
+import { Tween } from "tweedle.js";
 
 export class SmallCircles extends Container {
   // The physics is implemented into the graphics object
@@ -396,3 +397,231 @@ export class DoubleSmallCircles extends Container {
     }
   }
 }
+
+export class Square2 extends Container {
+  // The physics is implemented into the graphics object
+  constructor(y) {
+    super();
+    //graphics
+    this.screenWidth = Manager.width;
+    this.screenHeight = Manager.height;
+    this.x = this.screenWidth / 2;
+    const HEIGHT = 20;
+    const WIDTH = 150 + HEIGHT;
+    this.y = y - WIDTH * 2;
+
+    this.curClr = Manager.clr;
+    this.idx = Manager.colors.indexOf(this.curClr);
+    this.clr = Manager.colors;
+
+    this.W = WIDTH;
+    this.diam = 16;
+    // this.space = (WIDTH + this.diam * 2) * 2;
+    // this.y -= this.space;
+
+    this.shape1 = new Graphics();
+    // .lineStyle(3, this.clr[this.idx])
+    // .drawRect(0, 0, this.W, this.W);
+
+    this.circles = [];
+
+    for (let i = 0; i < 20; i++) {
+      const circle = new Graphics()
+        .beginFill(this.clr[Math.floor(i / 5) % 4])
+        .drawCircle(0, 0, 14);
+      if (i < 5) {
+        circle.x = this.W - (this.W / 5) * i;
+        circle.y = 0;
+      } else if (i < 10) {
+        circle.x = this.W;
+        circle.y = this.W - (this.W / 5) * (i % 5);
+      } else if (i < 15) {
+        circle.x = (this.W / 5) * (i % 5);
+        circle.y = this.W;
+      } else {
+        circle.x = 0;
+        circle.y = (this.W / 5) * (i % 5);
+      }
+
+      this.shape1.addChild(circle);
+      this.circles.push(circle);
+    }
+
+    this.addChild(this.shape1);
+
+    // drawRoundedRect(0, 0, WIDTH + HEIGHT, HEIGHT, 15);
+
+    // this.shape2.y = WIDTH + this.diam;
+    this.body = {
+      type: "superposing",
+      clr1: this.clr[0],
+      clr2: this.clr[2],
+    };
+    // this.addChild(this.shape1,this.shape2,this.shape3.this.shape4)
+    //physics
+    // this.body = Matter.Bodies.rectangle(
+    //   0,
+    //   this.screenHeight - 10,
+    //   this.screenWidth,
+    //   10,
+    //   { friction: 0, isStatic: true },
+    // );
+    // Matter.World.add(Manager.physics.world, this.body);
+    // this.body.gamePlatform = this; // why am i using this
+    // this.addChild(this.shape2, this.shape1);
+    // Math.sin(Math.PI / 3) * WIDTH;
+    this.shape1.pivot.set(WIDTH / 2, WIDTH / 2);
+    // this.circles1.pivot.set(WIDTH / 2, WIDTH / 2);
+    // this.circles2.pivot.set(WIDTH / 2, WIDTH / 2);
+    this.dx = 1;
+    this.dy = 10;
+    this.move(0);
+    this.move(5);
+    this.move(10);
+    this.move(15);
+  }
+  update(deltaTime) {}
+
+  detectCollision(hero, lose) {
+    const y = hero.y + hero.sprite.y;
+    const y1 = this.y + this.W / 2;
+    const y2 = this.y - this.W / 2;
+    if (
+      ((y > y1 && y < y1 + this.diam) ||
+        (y + hero.height > y1 && y + hero.height < y1 + this.diam)) &&
+      hero.body.clr !== this.body.clr1
+    ) {
+      lose();
+    }
+    if (
+      ((y > y2 && y < y2 + this.diam) ||
+        (y + hero.height > y2 && y + hero.height < y2 + this.diam)) &&
+      hero.body.clr !== this.body.clr2
+    ) {
+      lose();
+    }
+  }
+
+  move(idx) {
+    const clr = this.clr;
+    const circle = this.circles[idx];
+    const body = this.body;
+
+    function move1(circles) {
+      const tween = new Tween(circle)
+        .to(
+          {
+            x: 170,
+          },
+          750,
+        )
+        .onUpdate(() => {
+          for (let i = 1; i < 5; i++) {
+            const curCircle = circles[idx + i];
+            const dist = circle.x - (170 / 5) * i;
+            curCircle.x = Math.max(dist, 0);
+            curCircle.y = Math.max(0, -dist);
+          }
+          if (circle.x >= 170 / 2 - 14) {
+            body.clr2 = clr[idx / 5];
+            body.clr1 = clr[(idx / 5 + 2) % 4];
+          }
+        })
+        .onComplete(() => {
+          move2(circles);
+        });
+      return tween.start();
+    }
+
+    function move2(circles) {
+      const tween = new Tween(circle)
+        .to(
+          {
+            y: 170,
+          },
+          750,
+        )
+        .onUpdate(() => {
+          for (let i = 1; i < 5; i++) {
+            const curCircle = circles[idx + i];
+            const dist = circle.y - (170 / 5) * i;
+            curCircle.y = Math.max(dist, 0);
+            curCircle.x = Math.min(170 + dist, 170);
+          }
+        })
+        .onComplete(() => {
+          move3(circles);
+        });
+      return tween.start();
+    }
+
+    function move3(circles) {
+      const tween = new Tween(circle)
+        .to(
+          {
+            x: 0,
+          },
+          750,
+        )
+        .onUpdate(() => {
+          for (let i = 1; i < 5; i++) {
+            const curCircle = circles[idx + i];
+            const dist = circle.x + (170 / 5) * i;
+            curCircle.x = Math.min(dist, 170);
+            curCircle.y = Math.min(170 - (dist - 170), 170);
+          }
+        })
+        .onComplete(() => {
+          move4(circles);
+        });
+      return tween.start();
+    }
+
+    function move4(circles) {
+      const tween = new Tween(circle)
+        .to(
+          {
+            y: 0,
+          },
+          750,
+        )
+        .onUpdate(() => {
+          for (let i = 1; i < 5; i++) {
+            const curCircle = circles[idx + i];
+            const dist = circle.y + (170 / 5) * i;
+            curCircle.y = Math.min(dist, 170);
+            curCircle.x = Math.max(dist - 170, 0);
+          }
+        })
+        .onComplete(() => {
+          move1(circles);
+        });
+      return tween.start();
+    }
+
+    if (idx === 0) {
+      move1(this.circles);
+    } else if (idx === 5) {
+      move2(this.circles);
+    } else if (idx === 10) {
+      move3(this.circles);
+    } else if (idx === 15) {
+      move4(this.circles);
+    }
+  }
+}
+
+// How do we make this function?
+//
+// the first circle leads the way for the all the remaining circles, (indexes: 0, 5, 10)
+// the other circles must always be at an equal distance from this circle
+// in move1 and move2:
+//
+//
+// in move3 and move4 (slightly more complicated, because we are moving in a negative direction)
+//
+//
+//
+// The distance between two points is always going to equal to W/5*idx
+// move1
+// x = X0 - (y-)

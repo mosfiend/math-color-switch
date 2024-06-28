@@ -178,7 +178,7 @@ class Choice extends Container {
 // - Message her phone (OCE does not start again)
 
 // Remote
-// Contact  through oussama
+// Contact through oussama
 // Contact through binome
 // Luck:
 // Meet in patho

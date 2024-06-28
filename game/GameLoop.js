@@ -6,6 +6,7 @@ import {
   SmallCircles,
   DoubleSmallCircles,
   ContainedCircles,
+  Square2,
 } from "./Platforms2";
 import { ColorChanger, Star } from "./Items";
 import { Arithmetic } from "./Arithmetic";
@@ -28,7 +29,12 @@ export class GameLoop extends Container {
       DoubleCircle,
       Plus,
     ];
-    this.newObstacles = [SmallCircles, ContainedCircles, DoubleSmallCircles];
+    this.newObstacles = [
+      SmallCircles,
+      ContainedCircles,
+      DoubleSmallCircles,
+      Square2,
+    ];
 
     const star = new Star(Manager.app.stage.pivot.y);
     const block = new Circle(Manager.app.stage.pivot.y + 230);
