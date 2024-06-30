@@ -128,8 +128,6 @@ export class GameOver extends Container {
 
   async organize() {
     const data = await this.getScores();
-    console.log(data);
-    console.log(typeof data);
     if (this.allScores) this.removeChild(this.allScores);
     this.allScores = new Container();
     this.addChild(this.allScores);
@@ -212,14 +210,15 @@ class Submit extends Container {
     this.score = score;
     this.name = name;
     this.cb = cb;
-
+    console.log(this.cursor);
     this.submitted = false;
+    this.submitting = false;
     this.border = new Graphics()
       .beginFill(0x4eac8e)
-      .drawRoundedRect(0, 0, 80, 35, 3);
+      .drawRoundedRect(0, 0, 80, 35, 6);
     this.transBorder = new Graphics()
       .beginFill(0x2e9c6e)
-      .drawRoundedRect(0, 0, 80, 35, 3);
+      .drawRoundedRect(0, 0, 80, 35, 6);
     this.transBorder.alpha = 0;
     this.text = new Text(Manager.lang === "english" ? "Submit" : "Indienen", {
       fill: 0xffffff,
@@ -237,6 +236,7 @@ class Submit extends Container {
 
     this.on("pointerdown", () => {
       this.submit();
+      this.animation();
 
       this.on("pointerover", () => {
         new Tween(this.transBorder).to({ alpha: 1 }, 300).start();
@@ -252,6 +252,7 @@ class Submit extends Container {
 
     await this.createScore(this.name.value, this.score);
     this.submitted = true;
+    this.submitting = false;
     // if (localStorage["highScores"]) {
     // localStorage["highScores"] =
     //   localStorage["highScores"] +
@@ -264,6 +265,76 @@ class Submit extends Container {
     //   });
     // }
     this.cb();
+  }
+
+  animation() {
+    if (this.submitting) return;
+    if (this.submitted) return;
+
+    this.tick = Sprite.from("tick");
+    const TICK_SCALE = 30 / this.tick.width;
+    this.tick.scale.x = TICK_SCALE;
+    this.tick.scale.y = TICK_SCALE;
+    // this.tick.anchor.set(0.5, 0.5);
+    const rect = new Graphics().beginFill(0xff0000).drawRect(0, 0, 40, 200);
+    rect.x = -40;
+    this.tick.mask = rect;
+    this.addChild(rect, this.tick);
+
+    const prop = { roundness: 6, width: 80 };
+    let startPart2 = false;
+    let startPart3 = false;
+    const round = new Tween(prop)
+      .to({ roundness: 50 }, 200)
+      .onUpdate(() => {
+        this.border
+          .clear()
+          .beginFill(0x4eac8e)
+          .drawRoundedRect(0, 0, 80, 35, prop.roundness);
+        this.transBorder
+          .clear()
+          .beginFill(0x2e9c6e)
+          .drawRoundedRect(0, 0, 80, 35, prop.roundness);
+        this.text.alpha = 1 - prop.roundness / 50;
+        if (!startPart2 && this.text.alpha < 0.7) {
+          startPart2 = true;
+          shrink.start();
+        }
+      })
+      .start();
+
+    const shrink = new Tween(prop)
+      .to({ width: 35 }, 300)
+      .onUpdate(() => {
+        this.border
+          .clear()
+          .beginFill(0x4eac8e)
+          .drawRoundedRect(0, 0, prop.width, 35, prop.roundness);
+        this.transBorder
+          .clear()
+          .beginFill(0x2e9c6e)
+          .drawRoundedRect(0, 0, prop.width, 35, prop.roundness);
+
+        this.border.x = 40 - prop.width / 2;
+        this.transBorder.x = 40 - prop.width / 2;
+
+        if (!startPart3 && prop.width < 60) {
+          startPart3 = true;
+          this.tick.x = 22.5 + 5;
+          showTick.start();
+        }
+      })
+
+      .onComplete(() => {
+        console.log(this.transBorder.x);
+      });
+    const showTick = new Tween(rect)
+      .to({ x: this.transBorder.x + 5 + 20 }, 450)
+      .onComplete(() => {
+        this.cursor = "";
+      });
+
+    this.submitting = true;
   }
 
   async createScore(namae, score) {

@@ -12,6 +12,7 @@ export const manifest = {
         sound: "/images/sound.png",
         pause: "/images/pause.png",
         again: "/images/again.png",
+        tick: "/images/tick.png",
       },
     },
     {
