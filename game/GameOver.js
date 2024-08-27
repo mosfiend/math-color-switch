@@ -1,4 +1,5 @@
 import axios from "axios";
+import * as profanity from "badwords";
 import { Tween } from "tweedle.js";
 import { Container, Graphics, Sprite, Text } from "pixi.js";
 import { Menu } from "./Menu";
@@ -210,9 +211,10 @@ class Submit extends Container {
     this.score = score;
     this.name = name;
     this.cb = cb;
-    console.log(this.cursor);
     this.submitted = false;
     this.submitting = false;
+    this.validated = false;
+    this.profanity = new Set(profanity);
     this.border = new Graphics()
       .beginFill(0x4eac8e)
       .drawRoundedRect(0, 0, 80, 35, 6);
@@ -236,7 +238,6 @@ class Submit extends Container {
 
     this.on("pointerdown", () => {
       this.submit();
-      this.animation();
 
       this.on("pointerover", () => {
         new Tween(this.transBorder).to({ alpha: 1 }, 300).start();
@@ -248,11 +249,29 @@ class Submit extends Container {
   }
 
   async submit() {
+    let hasProfanity = false;
     if (this.submitted) return;
+    this.animation();
 
-    await this.createScore(this.name.value, this.score);
+    const name = this.name.value;
+    for (let i = 0; i < name.length; i++) {
+      for (let j = 0; j < profanity.length; j++) {
+        const length = profanity[j].length;
+        const sub = name.substring(i, i + length);
+        if (sub === profanity[j]) {
+          hasProfanity = true;
+          break;
+        }
+      }
+    }
+
+    if (!hasProfanity) {
+      this.validated = true;
+      const passed = await this.createScore(this.name.value, this.score);
+    }
     this.submitted = true;
     this.submitting = false;
+
     // if (localStorage["highScores"]) {
     // localStorage["highScores"] =
     //   localStorage["highScores"] +
@@ -276,10 +295,10 @@ class Submit extends Container {
     this.tick.scale.x = TICK_SCALE;
     this.tick.scale.y = TICK_SCALE;
     // this.tick.anchor.set(0.5, 0.5);
-    const rect = new Graphics().beginFill(0xff0000).drawRect(0, 0, 40, 200);
-    rect.x = -40;
-    this.tick.mask = rect;
-    this.addChild(rect, this.tick);
+    this.rect = new Graphics().beginFill(0xff0000).drawRect(0, 0, 40, 200);
+    this.rect.x = -40;
+    this.tick.mask = this.rect;
+    this.addChild(this.rect, this.tick);
 
     const prop = { roundness: 6, width: 80 };
     let startPart2 = false;
@@ -319,32 +338,63 @@ class Submit extends Container {
         this.transBorder.x = 40 - prop.width / 2;
 
         if (!startPart3 && prop.width < 60) {
-          startPart3 = true;
           this.tick.x = 22.5 + 5;
-          showTick.start();
+          if (this.validated) {
+            startPart3 = true;
+            this.successAnimation();
+          }
         }
       })
-
       .onComplete(() => {
-        console.log(this.transBorder.x);
+        if (!this.validated) this.failAnimation();
       });
-    const showTick = new Tween(rect)
-      .to({ x: this.transBorder.x + 5 + 20 }, 450)
+  }
+
+  successAnimation() {
+    const showTick = new Tween(this.rect)
+      .to({ x: this.transBorder.x + 17 }, 450)
       .onComplete(() => {
         this.cursor = "";
-      });
+      })
+      .start();
 
+    return showTick;
     this.submitting = true;
+  }
+
+  failAnimation() {
+    const prop = { roundness: 50, width: 80 };
+    const round = new Tween(prop)
+      .to({ roundness: 6 }, 200)
+      .onUpdate(() => {
+        this.border
+          .clear()
+          .beginFill(0x4eac8e)
+          .drawRoundedRect(0, 0, 80, 35, prop.roundness);
+        this.transBorder
+          .clear()
+          .beginFill(0x2e9c6e)
+          .drawRoundedRect(0, 0, 80, 35, prop.roundness);
+        this.text.alpha = (50 - prop.roundness) / 6;
+      })
+      .start();
+    this.border.x = 0;
+    this.transBorder.x = 0;
+    // new Tween(this.border)
+    //   .to({ x: 0 }, 200)
+    //   .onUpdate(() => {
+    //     // this.transBorder.x = this.border.x;
+    //   })
+    //   .start();
+    this.submitted = false;
   }
 
   async createScore(namae, score) {
     const API_URL = "https://math-world-highscores.onrender.com/api/scores";
-    console.log(score, "mostafa");
     const response = await axios.post(API_URL, {
       name: namae,
       score: score,
     });
-    console.log("the data", response);
     return response.data;
   }
 }
