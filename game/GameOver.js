@@ -224,7 +224,6 @@ class Submit extends Container {
     this.submitted = false;
     this.submitting = false;
     this.validated = false;
-    this.profanity = new Set(profanity);
     this.border = new Graphics()
       .beginFill(0x4eac8e)
       .drawRoundedRect(0, 0, 80, 35, 6);
