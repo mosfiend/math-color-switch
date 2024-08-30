@@ -58,6 +58,7 @@ export class Hero extends Container {
   }
 
   startJump() {
+    console.log("we dont");
     const temp = this.started;
     this.started = true;
     if (!temp) {

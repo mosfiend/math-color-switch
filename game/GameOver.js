@@ -127,6 +127,16 @@ export class GameOver extends Container {
       .yoyo(true);
   }
 
+  update() {}
+  transitionIn() {
+    Manager.app.stage.addChild(Manager.currentScene);
+  }
+
+  transitionOut() {
+    Manager.app.stage.removeChild(Manager.currentScene);
+    // Manager.app.stage.off("mousemove") remember to turn off events
+  }
+
   async organize() {
     const data = await this.getScores();
     if (this.allScores) this.removeChild(this.allScores);
