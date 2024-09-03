@@ -1,11 +1,11 @@
-import { Container, Graphics, Sprite, Text, Texture } from "pixi.js";
+import { Container, Sprite } from "pixi.js";
 import { Manager } from "../manager.js";
 
 export class Sounds extends Container {
   constructor() {
     super();
     this.x = 15;
-    this.y = 15;
+    this.y = 10;
 
     this.music = new Icon("music");
     this.music.x = 0;
@@ -16,7 +16,7 @@ export class Sounds extends Container {
     this.addChild(this.music, this.sfx);
   }
   update(deltaTime) {
-    this.y = Manager.app.stage.pivot.y + 15;
+    this.y = Manager.app.stage.pivot.y + 10;
   }
 }
 

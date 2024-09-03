@@ -17,12 +17,13 @@ export class Stage extends Container {
     this.screenHeight = Manager.height;
     this.keySet = new Set();
     this.released = true;
+
     this.score = new Score();
+
     this.pause = Sprite.from("pause");
     this.pause.x = this.screenWidth - 100;
     this.pause.width = 100;
     this.pause.height = 100;
-
     this.pause.eventMode = "static";
     this.pause.cursor = "pointer";
     this.pause.on("pointerdown", () => {});
@@ -32,7 +33,9 @@ export class Stage extends Container {
     this.hero = new Hero();
 
     this.bg = new Background(this.screenHeight);
+
     this.gameLoop = new GameLoop();
+
     this.addChild(this.bg, this.gameLoop, this.hero, this.score, this.sounds);
     this.eventMode = "static";
     // make entire screen interactive
