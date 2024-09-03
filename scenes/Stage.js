@@ -1,6 +1,5 @@
 import { Container, Graphics, Sprite, Text } from "pixi.js";
 import Matter from "matter-js";
-import { sound, Sound } from "@pixi/sound";
 import { Tween } from "tweedle.js";
 import { Manager } from "../manager.js";
 import { Background } from "../game/Background.js";
@@ -9,6 +8,7 @@ import { GameLoop } from "../game/GameLoop.js";
 import { Square } from "../game/Platforms.js";
 import { GameOver } from "../game/GameOver.js";
 import { StartMenu } from "./StartMenu.js";
+import { Sounds } from "../game/Sounds.js";
 
 export class Stage extends Container {
   constructor() {
@@ -17,7 +17,7 @@ export class Stage extends Container {
     this.screenHeight = Manager.height;
     this.keySet = new Set();
     this.released = true;
-    this.score = 0;
+    this.score = new Score();
     this.pause = Sprite.from("pause");
     this.pause.x = this.screenWidth - 100;
     this.pause.width = 100;
@@ -26,34 +26,14 @@ export class Stage extends Container {
     this.pause.eventMode = "static";
     this.pause.cursor = "pointer";
     this.pause.on("pointerdown", () => {});
-    const sprites = {
-      jump: { start: 1.2, end: 2 },
-      collect: { start: 2.2, end: 3.5 },
-      change: { start: 3.7, end: 4 },
-      death: { start: 12, end: 13 },
-    };
-    this.theme = Sound.from({ url: "sounds/sounds.mp3", sprites: sprites });
-    this.theme.volume = 0.05;
-    // this.theme.sprites = sprites;
-    // this.lost = false;
-    // this.theme.play();
-    // this.song = sound.add("spice", "/assets/images/ITS.mp3")
-    /// ELEMENTS
-    //
 
-    this.hero = new Hero(this.theme);
-    this.scoreBoard = new Text(this.hero.sprite.y, {
-      fill: 0xffffff,
-      fontWeight: "400",
-      fontFamily: "Madimi One",
-      letterSpacing: 2,
-    });
+    this.sounds = new Sounds();
 
-    this.scoreBoard.x = 15 + this.scoreBoard.width;
-    this.scoreBoard.y = Manager.app.stage.pivot.y + 15;
+    this.hero = new Hero();
+
     this.bg = new Background(this.screenHeight);
     this.gameLoop = new GameLoop();
-    this.addChild(this.bg, this.gameLoop, this.hero, this.scoreBoard);
+    this.addChild(this.bg, this.gameLoop, this.hero, this.score, this.sounds);
     this.eventMode = "static";
     // make entire screen interactive
     this.on("pointerdown", () => {
@@ -83,8 +63,6 @@ export class Stage extends Container {
     this.hero.update(deltaTime);
     if (this.lost) return;
     this.handleEvent();
-    this.scoreBoard.text = Math.trunc(this.score);
-    this.scoreBoard.y = Manager.app.stage.pivot.y + 15;
     this.pause.y = Manager.app.stage.pivot.y + 20;
     this.bg.update(deltaTime);
     const world = Manager.app.stage;
@@ -94,6 +72,8 @@ export class Stage extends Container {
       world.pivot.set(0, world.pivot.y + DIFF);
       this.bg.y = world.pivot.y;
     }
+    this.score.update(deltaTime);
+    this.sounds.update(deltaTime);
     this.gameLoop.update(deltaTime);
 
     //COLOR SWITCH
@@ -104,8 +84,8 @@ export class Stage extends Container {
         this.hero.sprite.y < star.y + star.height
       ) {
         if (!star.imploded) {
-          this.score++;
-          this.theme.play("collect");
+          this.score.increment();
+          Manager.sfx.play("collect");
         }
 
         star.activate();
@@ -226,6 +206,7 @@ export class Stage extends Container {
   lose() {
     this.hero.implode();
     this.lost = true;
+    Manager.music.volume = Math.min(Manager.music.volume, 0.02);
     const temp = new Graphics()
       .beginFill(0xcee7e1)
       .drawRect(0, 0, this.screenWidth, this.screenHeight);
@@ -238,7 +219,7 @@ export class Stage extends Container {
     tween1.start().onComplete(() => {
       tween2.start().onComplete(() => {
         Manager.app.stage.pivot.set(0, 0);
-        const scene = new GameOver(func, this.score);
+        const scene = new GameOver(func, this.score.score);
         this.addChild(scene);
       });
     });
@@ -248,5 +229,63 @@ export class Stage extends Container {
       Manager.changeScene(new Stage());
       // Manager.usedOps = new Set()
     }
+  }
+}
+
+class Score extends Container {
+  constructor(collected) {
+    super();
+
+    this.score = 0;
+    this.collected = collected;
+    this.x = 15;
+    this.y = Manager.height - 80;
+
+    this.sprite = Sprite.from("star");
+    this.sprite.width = 30;
+    this.sprite.height = 30;
+    this.sprite.tint = 0xffffff;
+    this.sprite2 = Sprite.from("crown");
+    this.sprite2.width = 30;
+    this.sprite2.height = 30;
+
+    this.text = new Text("0", {
+      fill: 0xffffff,
+      fontWeight: "400",
+      fontFamily: "Madimi One",
+      fontSize: 30,
+      letterSpacing: 2,
+    });
+    this.text.x = this.sprite.width + 10;
+    this.text.y = this.sprite.height / 2 - this.text.height / 2;
+
+    console.log(localStorage.personalBest);
+    this.highscore = new Text(
+      isNaN(localStorage.personalBest) ? 0 : localStorage.personalBest,
+      {
+        fill: 0xffffff,
+        fontWeight: "400",
+        fontFamily: "Madimi One",
+        fontSize: 30,
+        letterSpacing: 2,
+      },
+    );
+    this.highscore.x = Manager.width - this.highscore.width - 30;
+    this.highscore.y = this.sprite.height / 2 - this.highscore.height / 2;
+    this.sprite2.x = this.highscore.x - this.sprite2.width - 10;
+
+    this.addChild(this.sprite, this.text, this.highscore, this.sprite2);
+  }
+  update() {
+    this.y = Manager.app.stage.pivot.y + Manager.height - 80;
+  }
+  increment() {
+    this.text.text = ++this.score;
+    this.highscore.text = Math.max(
+      Number(this.highscore.text),
+      Number(this.text.text),
+    );
+    console.log(this.highscore.text);
+    localStorage.setItem("personalBest", String(this.highscore.text));
   }
 }

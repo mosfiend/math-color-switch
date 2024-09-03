@@ -86,33 +86,56 @@ export class Arithmetic extends Container {
     switch (this.operator) {
       case "plus":
         this.result = this.operands[0] + this.operands[1];
+        const rand = Math.trunc(Math.random() * 21);
+        const rand2 = Math.trunc(Math.random() * 21);
+        const rand3 = Math.trunc(Math.random() * 21);
+        this.values.push(rand === this.result ? rand - 1 : rand);
+        this.values.push(rand2 === this.result ? rand2 - 2 : rand2);
         this.values.push(
-          this.operands[0] + this.operands[1] + this.operands[1],
+          rand3 === this.result ? rand3 + Math.trunc(Math.random() * 5) : rand3,
         );
         break;
       case "minus":
         this.result = this.operands[0] - this.operands[1];
-        this.values.push(Math.abs(this.operands[1] - this.operands[0]));
+        const rand4 = Math.trunc(Math.random() * 21);
+        const rand5 = Math.trunc(Math.random() * 21);
+        const rand6 = Math.trunc(Math.random() * 21);
+        this.values.push(rand4 === this.result ? rand4 - 1 : rand4);
+        this.values.push(rand5 === this.result ? rand5 - 2 : rand5);
+        this.values.push(
+          rand6 === this.result ? rand6 + Math.trunc(Math.random() * 5) : rand6,
+        );
         break;
       case "times":
         this.result = this.operands[0] * this.operands[1];
         this.values.push(this.operands[1] * (this.operands[0] + 1));
+
+        if (String(this.result).length === 1) {
+          this.values.push(
+            Number(String(this.result) * Math.trunc(Math.random() * 3)),
+          );
+        } else {
+          this.values.push(
+            Number(String(this.result).split("").reverse().join("")),
+          );
+        }
         break;
       case "by":
         this.result = this.operands[0] / this.operands[1];
         this.values.push(this.result + this.operands[1]);
+
+        if (String(this.result).length === 1) {
+          this.values.push(
+            Number(String(this.result) * Math.trunc(Math.random() * 3)),
+          );
+        } else {
+          this.values.push(
+            Number(String(this.result).split("").reverse().join("")),
+          );
+        }
         break;
     }
     this.values.push(this.result);
-    if (String(this.result).length === 1) {
-      this.values.push(
-        Number(String(this.result) * Math.trunc(Math.random() * 3)),
-      );
-    } else {
-      this.values.push(
-        Number(String(this.result).split("").reverse().join("")),
-      );
-    }
     this.values.push(this.result + Math.trunc(Math.random() * 10) + 1);
     this.values.push(this.result + Math.trunc(Math.random() * 20) + 1);
     for (let i = 0, l = this.values.length; i < l; i++) {
@@ -122,10 +145,34 @@ export class Arithmetic extends Container {
   }
 
   createOperands() {
+    this.operator =
+      this.operators[Math.trunc(Math.random() * this.operators.length)];
+    const ceil1 =
+      this.operator === "minus" || this.operator === "plus" ? 20 : 10;
+    this.operands[0] =
+      this.operator === "plus"
+        ? 20 - Math.ceil(Math.random() * ceil1)
+        : Math.trunc(Math.random() * ceil1);
+    const ceil2 =
+      this.operator === "minus"
+        ? this.operands[0]
+        : this.operator === "plus"
+          ? 20 - this.operands[0]
+          : 10;
+    this.operands[1] = Math.trunc(Math.random() * ceil2) + 1;
+
+    if (this.operator === "minus") {
+      this.operands[0] = Math.max(this.operands[0], 1); // prevent negative op
+    }
+    if (this.operator === "by") {
+      this.operands[0] = this.operands[0] * this.operands[1];
+    }
+
     switch (this.operator) {
       case "plus":
-        this.operands[0] = Math.trunc(Math.random() * 20) + 1;
-        this.operands[1] = Math.trunc(Math.random() * 20) + 1;
+        this.operands[0] = Math.trunc(Math.random() * 20);
+        this.operands[1] =
+          Math.trunc(Math.random() * (20 - Math.trunc(this.operands[0]))) + 1;
         break;
       case "minus":
         this.operands[0] = Math.trunc(Math.random() * 20) + 1;

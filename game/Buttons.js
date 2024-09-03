@@ -56,6 +56,7 @@ export class Icon extends Container {
       Manager.arithmetic[this.operator] = false;
     }
 
+    localStorage.setItem("arithmeticState", JSON.stringify(Manager.arithmetic));
     this.selected = !this.selected;
   }
   checkFalsehood() {

@@ -36,13 +36,27 @@ export class Manager {
     Manager.operators = ["plus", "minus", "times", "by"];
     Manager.usedOps = new Set();
     Manager.scores;
-    Manager.arithmetic = {
-      plus: true,
-      minus: false,
-      times: false,
-      by: false,
-    };
+    const savedState = JSON.parse(localStorage.getItem("arithmeticState"));
+    if (savedState) {
+      Manager.arithmetic = savedState;
+    } else {
+      Manager.arithmetic = {
+        plus: false,
+        minus: false,
+        times: true,
+        by: false,
+      };
+    }
 
+    const soundSettings = JSON.parse(localStorage.getItem("soundSettings"));
+    if (soundSettings) {
+      Manager.soundSettings = savedState;
+    } else {
+      Manager.soundSettings = {
+        music: true,
+        sfx: true,
+      };
+    }
     // Create our pixi app
     Manager.app = new PIXI.Application({
       view: document.getElementById("pixi-canvas"),

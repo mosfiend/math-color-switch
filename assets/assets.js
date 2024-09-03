@@ -9,10 +9,11 @@ export const manifest = {
         "title-dutch": "/images/logo-dutch.png",
         logo: "/images/logo.png",
         music: "/images/music.png",
-        sound: "/images/sound.png",
+        sfx: "/images/sound.png",
         pause: "/images/pause.png",
         again: "/images/again.png",
         tick: "/images/tick.png",
+        crown: "/images/crown.png",
       },
     },
     {
