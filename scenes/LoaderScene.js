@@ -24,6 +24,7 @@ export class LoaderScene extends PIXI.Container {
       death: { start: 12.3, end: 13 },
     };
     Manager.sfx = Sound.from({ url: "sounds/sounds.mp3", sprites: sprites });
+    console.log(Manager.soundSettings);
     Manager.sfx.volume = Manager.soundSettings.sfx ? 0.1 : 0;
     Manager.music = Sound.from({ url: "sounds/theme.mp3", sprites: sprites });
     Manager.music.volume = Manager.soundSettings.music ? 0.1 : 0;
