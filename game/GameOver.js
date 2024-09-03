@@ -1,5 +1,5 @@
 import axios from "axios";
-import * as profanity from "badwords";
+import * as profane from "badwords";
 import { Tween } from "tweedle.js";
 import { Container, Graphics, Sprite, Text } from "pixi.js";
 import { Selection } from "./Buttons";
