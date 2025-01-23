@@ -173,7 +173,7 @@ export class GameOver extends Container {
   // localStorage['myKey'] = JSON.stringify(myVar);
   //
   async getScores() {
-    const API_URL = "https://math-world-highscores.onrender.com/api/scores";
+    const API_URL = "https://math-world-highscores-u67y.onrender.com/api/scores";
     const response = await axios.get(API_URL, {});
     return response.data;
   }
