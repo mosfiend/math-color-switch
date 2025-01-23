@@ -399,7 +399,7 @@ class Submit extends Container {
   }
 
   async createScore(namae, score) {
-    const API_URL = "https://math-world-highscores.onrender.com/api/scores";
+    const API_URL = "https://math-world-highscores-u67y.onrender.com/api/scores";
     const response = await axios.post(API_URL, {
       name: namae,
       score: score,

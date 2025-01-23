@@ -111,13 +111,13 @@ export class Manager {
   }
 
   static async getScores() {
-    const API_URL = "https://math-world-highscores.onrender.com/api/scores";
+    const API_URL = "https://math-world-highscores-u67y.onrender.com/api/scores";
     const response = await axios.get(API_URL, {});
     return response.data;
   }
 
   async createScore(namae, score) {
-    const API_URL = "https://math-world-highscores.onrender.com/api/scores";
+    const API_URL = "https://math-world-highscores-u67y.onrender.com/api/scores";
     console.log(score, "mostafa");
     const response = await axios.post(API_URL, {
       name: namae,
